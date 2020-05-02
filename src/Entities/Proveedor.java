@@ -15,6 +15,12 @@ public class Proveedor
    
    @Column(name="empresa")
    private String empresa;
+   
+   @Column(name="contacto")
+   private String contacto;
+   
+   @Column(name="contacto")
+   private String direccion;
 
    public int getIdProveedor()
    {
@@ -36,5 +42,24 @@ public class Proveedor
       this.empresa=empresa;
    }
 
+   public String getContacto()
+   {
+	   return contacto;
+   }
+   
+   public void setContacto(String contacto)
+   {
+	   this.contacto=contacto;
+   }
+   
+   public String getDireccion()
+   {
+	   return direccion;
+   }
+   
+   public void setDireccion(String direccion)
+   {
+	   this.direccion=direccion;
+   }
 
 }
