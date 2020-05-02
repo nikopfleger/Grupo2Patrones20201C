@@ -1,9 +1,10 @@
-package myhibernate.demo;
+package principal;
 
 import java.util.List;
 
-import myhibernate.MyHibernate;
-import myhibernate.Query;
+import myHibernate.MyHibernate;
+import myHibernate.Query;
+import Entities.Producto;
 
 public class Demo
 {
