@@ -3,8 +3,10 @@ package Entities;
 import ann.Column;
 import ann.Entity;
 import ann.Id;
+import ann.Table;
 
 @Entity
+@Table(name="tipo_cliente")
 public class TipoCliente
 {
 	@Id
