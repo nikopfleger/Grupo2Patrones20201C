@@ -1,8 +1,8 @@
-package myhibernate;
+package myHibernate;
 
 import java.util.List;
 
-import myhibernate.demo.Producto;
+import Entities.Producto;
 
 public class MyHibernate
 {

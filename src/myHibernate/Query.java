@@ -1,4 +1,4 @@
-package myhibernate;
+package myHibernate;
 
 import java.util.List;
 

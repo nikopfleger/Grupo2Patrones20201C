@@ -1,9 +1,9 @@
-package myhibernate.demo;
+package Entities;
 
-import myhibernate.ann.Column;
-import myhibernate.ann.Entity;
-import myhibernate.ann.Id;
-import myhibernate.ann.Table;
+import ann.Column;
+import ann.Entity;
+import ann.Id;
+import ann.Table;
 
 @Entity
 @Table(name="proveedor")
