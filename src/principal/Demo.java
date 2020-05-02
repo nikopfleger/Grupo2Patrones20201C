@@ -2,9 +2,9 @@ package principal;
 
 import java.util.List;
 
-import myHibernate.MyHibernate;
-import myHibernate.Query;
 import Entities.Producto;
+import myhibernate.MyHibernate;
+import myhibernate.Query;
 
 public class Demo
 {
