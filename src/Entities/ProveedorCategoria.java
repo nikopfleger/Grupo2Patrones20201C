@@ -3,6 +3,7 @@ package Entities;
 import ann.Column;
 import ann.Entity;
 import ann.Id;
+import ann.ManyToOne;
 
 @Entity
 public class ProveedorCategoria
@@ -11,9 +12,11 @@ public class ProveedorCategoria
 	@Column(name="id_proveedor_categoria")
 	private int idProveedorCategoria;
 	
+	@ManyToOne
 	@Column(name="id_proveedor")
 	private int idProveedor;
 	
+	@ManyToOne
 	@Column(name="id_categoria")
 	private int idCategoria;
 
