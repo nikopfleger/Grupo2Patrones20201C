@@ -7,6 +7,7 @@ import ann.JoinColumn;
 import ann.ManyToOne;
 import Entities.Proveedor;
 import ann.Table;
+import Entities.Categoria;
 
 @Entity
 @Table(name="producto")
@@ -22,7 +23,64 @@ public class Producto
    @ManyToOne
    @JoinColumn(name="id_proveedor")
    private Proveedor proveedor;
+   
+   @ManyToOne
+   @JoinColumn(name="id_categoria")
+   private Categoria categoria;
+   
+   @Column(name="precio_unitario")
+   float precioUnitario;
+   
+   @Column(name="unidades_stock")
+   int unidadesStock;
+   
+   @Column(name="unidades_reposicion")
+   int unidadesReposicion;
+   
+   @Column(name="flg_discontinuo")
+   boolean flgDiscontinuo;
+   
+   public Categoria getCategoria()
+   {
+	   return this.categoria;
+   }
+   
+   public void setCategoria(Categoria categoria)
+   {
+	   this.categoria = categoria;
+   }
+   
+   public float getPrecioUnitario()
+   {
+	   return this.precioUnitario;
+   }
+   
+   public void setPrecioUnitario(float precioUnitario)
+   {
+	   this.precioUnitario = precioUnitario;
+   }
+   
+   public int getUnidadesStock()
+   {
+      return this.unidadesStock;
+   }
 
+   public void setUnidadesStock(int unidadesStock)
+   {
+      this.unidadesStock=unidadesStock;
+   }
+
+   public int getUnidadesReposicion()
+   {
+      return this.unidadesReposicion;
+   }
+
+   public void setUnidadesReposicion(int unidadesReposicion)
+   {
+      this.unidadesReposicion=unidadesReposicion;
+   }
+
+   
    public int getIdProducto()
    {
       return idProducto;
@@ -51,6 +109,16 @@ public class Producto
    public void setProveedor(Proveedor proveedor)
    {
       this.proveedor=proveedor;
+   }
+   
+   public boolean getFlgDiscontinuo()
+   {
+	   return this.flgDiscontinuo;
+   }
+   
+   public void setFlgDiscontinuo(boolean flgDiscontinuo)
+   {
+	   this.flgDiscontinuo = flgDiscontinuo;
    }
 
 }

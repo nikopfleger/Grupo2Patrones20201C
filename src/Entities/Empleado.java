@@ -1,7 +1,5 @@
 package Entities;
 
-import java.sql.Date;
-
 import ann.Column;
 import ann.Entity;
 import ann.Id;
