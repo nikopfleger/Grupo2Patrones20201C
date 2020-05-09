@@ -1,15 +1,75 @@
 package myhibernate;
 
+import java.lang.reflect.Field;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 import Entities.Producto;
+import ann.Column;
+import ann.Id;
+import ann.Table;
+import database.DBManager;
+import sun.security.jca.GetInstance;
 
 public class MyHibernate
 {
    public static <T> T find(Class<T> clazz, int id)
    {
-      // PROGRAMAR AQUI
-      return null;
+	   PreparedStatement pstm = null;
+	   ResultSet rs = null;
+	   T returnedObject = null;
+	   DBManager db = new DBManager("","","");
+	   db.Connect();
+	   
+	   try
+	   {
+		   // Armado de la query SQL
+		   String sql= "";
+		   sql += "SELECT " + GetClassFields(clazz)+" ";
+		   sql += "FROM "+ GetTableName(clazz)+" ";
+		   sql += "WHERE "+ IDColumnName(clazz);
+		   
+		   // preparo la sentencia
+		   //pstm = con.prepareStatement(sql);
+
+		   pstm.setObject(1, id);
+		   // Ejecucion de la query
+		   rs = pstm.executeQuery();
+		   
+	   	   if( rs.next() )
+	   	   {
+	   	   // obtengo una instancia del DTO y le seteo los datos tomados del ResultSet
+	   	   returnedObject = GetInstance(clazz);
+	   	   InvokeSetters(returnedObject, rs, clazz);
+		   // si hay otra fi la entonces hay inconsistencia de datos...
+		      	if( rs.next() )
+		      	{
+		      		throw new RuntimeException("Mas de una fila...");
+			   	}
+		   		return returnedObject;
+		   }
+	   	   return null;
+	   }
+	   catch(Exception ex)
+	   {
+		   ex.printStackTrace();
+		   throw new RuntimeException(ex);
+	   }
+	   finally
+	   {
+		   try
+		   {
+			   if( db!=null ) db.Close();
+			   if( pstm!=null ) pstm.close();
+			   //pool.releaseConnection(con);
+		   }
+		   catch(Exception ex)
+		   {
+			   ex.printStackTrace();
+			   throw new RuntimeException(ex);
+		   }
+	   }
    }
 
    public static <T> List<T> findAll(Class<T> clazz)
@@ -23,5 +83,72 @@ public class MyHibernate
       // PROGRAMAR AQUI
       return null;
    }
+   
+   private static <T> T GetInstance(Class<T> dtoClass)
+   {
+	   try
+	   {
+		   return dtoClass.newInstance();
+	   }
+	   catch(Exception ex)
+	   {
+		   ex.printStackTrace();
+		   throw new RuntimeException(ex);
+	   }
+   }
+   
+   private static String GetClassFields(Class dto)
+   {
+	   Field[] fields = dto.getDeclaredFields();
+	   String fieldsConcat="";
+	   
+	   for( int i=0; i < fields.length; i++ )
+	   {
+		   fieldsConcat += fields[i].getName() + ((i < fields.length-1)?", ":"");
+	   }
+	   
+	   return fieldsConcat;
+   }
+   
+   private static <T> String GetTableName(Class<T> dto)
+   {
+	   String tableName = dto.getAnnotation(Table.class).name();
+	   	   
+	   return tableName;
+   }
+   
+   private static String IDColumnName(Class dto)
+   {
+	   Field[] fields = dto.getDeclaredFields();
+	   String idColumnName = "";
+	   
+	   for (Field field : fields) {
+		   if (field.isAnnotationPresent(Id.class))
+			   idColumnName = field.getAnnotation(Column.class).name();
+	   }
+	   
+	   return idColumnName;
+   }
+   
+   private static void InvokeSetters(Object dto, ResultSet rs, Class dtoClass)
+   {
+	   Field[] fields = dtoClass.getDeclaredFields();
+	   Object valueColumn;
+	   String attName = "";
 
+	   try
+	   {
+		   for (Field field : fields) {
+			   attName = field.getAnnotation(Column.class).name(); // Esto esta MAL
+			   valueColumn = rs.getObject(field.getAnnotation(Column.class).name());
+			   
+			   // Utilizar los setters para poner los valores a los respectivos campos
+		   }
+	   }
+	   catch(Exception ex)
+	   {
+		   ex.printStackTrace();
+		   throw new RuntimeException(ex);
+	   }
+   }
 }
