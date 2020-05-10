@@ -16,7 +16,7 @@ public class DBManager
 		
 		try {
 			// org.hsqldb.jdbcDriver - capitulo 15 - Java a Fondo
-			Class.forName("org.hsqldb.jdbc.JDBCDriver");
+			Class.forName("");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
