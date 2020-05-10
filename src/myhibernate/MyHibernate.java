@@ -16,7 +16,6 @@ public class MyHibernate
 {
    public static <T> T find(Class<T> clazz, int id)
    {
-	   PreparedStatement pstm = null;
 	   ResultSet rs = null;
 	   T returnedObject = null;
 	   DBManager db = new DBManager("","","");
@@ -25,17 +24,15 @@ public class MyHibernate
 	   try
 	   {
 		   // Armado de la query SQL
-		   String sql= "";
-		   sql += "SELECT " + GetClassFields(clazz)+" ";
-		   sql += "FROM "+ GetTableName(clazz)+" ";
-		   sql += "WHERE "+ IDColumnName(clazz);
-		   
-		   // preparo la sentencia
-		   //pstm = con.prepareStatement(sql);
+		   String sqlQuery= "";
+		   sqlQuery += "SELECT " + GetClassFields(clazz)+" ";
+		   sqlQuery += "FROM "+ GetTableName(clazz)+" ";
+		   sqlQuery += "WHERE "+ IDColumnName(clazz);
 
-		   pstm.setObject(1, id);
+		   // pstm.setObject(1, id);
+		   
 		   // Ejecucion de la query
-		   rs = pstm.executeQuery();
+		   rs = db.ExecuteQuery(sqlQuery);
 		   
 	   	   if( rs.next() )
 	   	   {
@@ -61,8 +58,6 @@ public class MyHibernate
 		   try
 		   {
 			   if( db!=null ) db.Close();
-			   if( pstm!=null ) pstm.close();
-			   //pool.releaseConnection(con);
 		   }
 		   catch(Exception ex)
 		   {

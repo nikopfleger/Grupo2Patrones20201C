@@ -37,4 +37,28 @@ public class DBManager
 			e.printStackTrace();
 		}
 	}
+	
+	public ResultSet ExecuteQuery(String query) {
+		ResultSet rs = null;
+        Statement st = null;
+
+        try {
+        	if (conn != null) {
+        		st = conn.createStatement();
+                rs = st.executeQuery(query);
+        	}            
+        } catch (SQLException ex) {
+        	ex.printStackTrace();
+        } finally {
+           	if (st != null) {
+	            try{  
+	                st.close();
+	            } catch (SQLException ex) {
+	            	ex.printStackTrace();
+	            }
+           	}
+        }
+        
+        return rs;
+	}
 }
