@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import Entities.Producto;
+import Entities.Promocion;
 import ann.Table;
 import myhibernate.MyHibernate;
 import myhibernate.Query;
@@ -37,7 +38,7 @@ public class Demo
 //      }
       
     
-	   System.out.println(MyHibernate.find(Producto.class,1).getDescripcion());
+	   System.out.println(MyHibernate.find(Promocion.class,1).getDescripcion());
 	   
    }
 }
