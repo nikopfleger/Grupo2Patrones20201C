@@ -29,7 +29,7 @@ public class Producto
    private Categoria categoria;
    
    @Column(name="precio_unitario")
-   float precioUnitario;
+   double precioUnitario;
    
    @Column(name="unidades_stock")
    int unidadesStock;
@@ -50,12 +50,12 @@ public class Producto
 	   this.categoria = categoria;
    }
    
-   public float getPrecioUnitario()
+   public double getPrecioUnitario()
    {
 	   return this.precioUnitario;
    }
    
-   public void setPrecioUnitario(float precioUnitario)
+   public void setPrecioUnitario(double precioUnitario)
    {
 	   this.precioUnitario = precioUnitario;
    }

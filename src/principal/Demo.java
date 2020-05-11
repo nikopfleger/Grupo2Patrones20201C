@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import Entities.Orden;
 import Entities.Producto;
 import Entities.Promocion;
 import ann.Table;
@@ -36,11 +37,25 @@ public class Demo
 //      {
 //         System.out.println(px.getDescripcion()+", "+px.getProveedor().getEmpresa());         
 //      }
+	   
        Promocion promo = new Promocion();
        promo = MyHibernate.find(Promocion.class,1);
     
 	   System.out.println(promo.getIdPromocion());
 	   System.out.println(promo.getDescripcion());
 	   
+	   Producto product = new Producto();
+	   product = MyHibernate.find(Producto.class,1);
+	   
+	   System.out.println(product.getProveedor().getIdProveedor());
+	   System.out.println(product.getProveedor().getDireccion());
+	   System.out.println(product.getProveedor().getEmpresa());
+	   System.out.println(product.getProveedor().getContacto());
+	   
+	   //Orden orden = new Orden();
+	   //orden = MyHibernate.find(Orden.class,1);
+	   
+	   //System.out.println(orden.getCliente().getNombre());
+	   //System.out.println(orden.getCliente().getTipoCliente().getDescripcion());
    }
 }

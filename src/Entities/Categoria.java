@@ -10,9 +10,29 @@ import ann.Table;
 public class Categoria
 {
 	@Id
-	@Column(name="categoria_id")
-	private int categoriaId;
+	@Column(name="id_categoria")
+	private int idCategoria;
 	
 	@Column(name="descripcion")
 	private String descripcion;
+	
+	public int getIdCategoria()
+    {
+       return idCategoria;
+    }
+
+    public void setIdCategoria(int idCategoria)
+    {
+       this.idCategoria=idCategoria;
+    }
+    
+    public String getDescripcion()
+    {
+       return descripcion;
+    }
+
+    public void setDescripcion(String descripcion)
+    {
+       this.descripcion=descripcion;
+    }
 }

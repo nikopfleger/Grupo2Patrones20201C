@@ -20,11 +20,13 @@ import sun.security.jca.GetInstance;
 
 public class MyHibernate
 {
+	private static DBManager db;
+	
 	public static <T> T find(Class<T> clazz, int id)
 	{
 		ResultSet rs = null;
 	    T returnedObject = null;
-	    DBManager db = new DBManager("jdbc:hsqldb:C:\\java64\\hsqldb-2.3.4\\hsqldb\\testdb\\testDB;hsqldb.lock_file=false","sa","");
+	    db = new DBManager("jdbc:hsqldb:C:\\java64\\hsqldb-2.3.4\\hsqldb\\testdb\\testDB;hsqldb.lock_file=false","sa","");
 	    db.Connect();
 		   
 		try
@@ -44,9 +46,9 @@ public class MyHibernate
 			if(rs.next())
 			{
 				// obtengo una instancia del DTO y le seteo los datos tomados del ResultSet
-				returnedObject=GetInstance(clazz);
+				returnedObject = GetInstance(clazz);
 				
-				InvokeSetters(returnedObject,rs,clazz);
+				InvokeSetters(returnedObject,rs,clazz,returnedObject);
 				// si hay otra fila entonces hay inconsistencia de datos...
 				if(rs.next())
 				{
@@ -65,7 +67,7 @@ public class MyHibernate
 		{
 			try
 			{
-				if( db!=null ) db.Close();
+				if(db != null) db.Close();
 			}
 			catch(Exception ex)
 			{
@@ -110,7 +112,8 @@ public class MyHibernate
 			if (field.isAnnotationPresent(Id.class))
             	columnNameId = field.getAnnotation(Column.class).name();
 
-            if (field.isAnnotationPresent(JoinColumn.class)) {
+            if (field.isAnnotationPresent(JoinColumn.class)) 
+            {
                 String columnIdFK = field.getAnnotation(JoinColumn.class).name();
                 Class<?> fieldType = field.getType();
                 String tableFieldName = fieldType.getAnnotation(Table.class).name();
@@ -122,11 +125,11 @@ public class MyHibernate
 		return sqlQueryWithJoins;
 	}
 
-	private static <T> T GetInstance(Class<T> dtoClass)
+	private static <T> T GetInstance(Class<?> dtoClass)
 	{
 		try
 		{
-			return dtoClass.newInstance();
+			return (T)dtoClass.newInstance();
 		}
 		catch(Exception ex)
 		{
@@ -137,7 +140,6 @@ public class MyHibernate
 
 	private static String GetClassFields(Class dto)
 	{
-
 		Field[] fields=dto.getDeclaredFields();
 		String fieldsConcat="";
 		String fieldName="";
@@ -147,24 +149,19 @@ public class MyHibernate
 			if(fields[i].isAnnotationPresent(Column.class))
 			{
 				if(fields[i].getDeclaredAnnotation(Column.class).name()!="")
-				{
 					fieldName=fields[i].getDeclaredAnnotation(Column.class).name();
-				}
 				else
-				{
 					fieldName=fields[i].getName();
-				}
-			}else if(fields[i].isAnnotationPresent(JoinColumn.class)){
-				if(fields[i].getDeclaredAnnotation(JoinColumn.class).name()!="")
-				{
-					fieldName=fields[i].getDeclaredAnnotation(JoinColumn.class).name();
-				}
-				else
-				{
-					fieldName=fields[i].getName();
-				}
 			}
-			fieldsConcat+=fieldName+((i<fields.length-1)?", ":"");
+			else if(fields[i].isAnnotationPresent(JoinColumn.class))
+			{
+				if(fields[i].getDeclaredAnnotation(JoinColumn.class).name()!="")
+					fieldName=fields[i].getDeclaredAnnotation(JoinColumn.class).name();
+				else
+					fieldName=fields[i].getName();
+			}
+			
+			fieldsConcat += fieldName + ((i<fields.length-1)?", ":"");
 		}
 
 		return fieldsConcat;
@@ -190,33 +187,33 @@ public class MyHibernate
 		return idColumnName;
 	}
 
-	private static void InvokeSetters(Object dto, ResultSet rs, Class dtoClass)
+	private static <T> void InvokeSetters(Object dto, ResultSet rs, Class dtoClass, T returnedObject)
 	{
-		Field[] fields=dtoClass.getDeclaredFields();
+		Field[] fields = dtoClass.getDeclaredFields();
 		Object valueColumn = null;
-		String attName="";
+		Class<?> columnType;
+		String attName = "";
 
 		try
 		{
 			for(Field field:fields)
 			{
+				// Utilizar los setters para poner los valores a las respectivas propiedades
 				attName = field.getName();
-				if(field.getAnnotation(Column.class)!=null)
+				columnType = field.getType();
+				if(field.getAnnotation(Column.class) != null)
 				{
-					valueColumn=rs.getObject(field.getAnnotation(Column.class).name());
+					valueColumn = rs.getObject(field.getAnnotation(Column.class).name());
+					SettersPrimitiveTypes(dto, attName, valueColumn, columnType);
 				}
 				else
 				{
-					if(field.getDeclaredAnnotation(JoinColumn.class)!=null)
+					if(field.getDeclaredAnnotation(JoinColumn.class) != null)
 					{
-						valueColumn=rs.getObject(field.getAnnotation(JoinColumn.class).name());
+						valueColumn = rs.getObject(field.getAnnotation(JoinColumn.class).name());
+						SettersEntities(dto, attName, valueColumn, rs, field, returnedObject);
 					}
 				}
-				invoqueSetter(dto, attName, valueColumn);
-
-				// Utilizar los setters para poner los valores a los respectivos
-				// campos
-
 			}
 		}
 		catch(Exception ex)
@@ -226,32 +223,113 @@ public class MyHibernate
 		}
 	}
 
-	private static void invoqueSetter(Object dto, String attName, Object value)  {
-		try{
+	private static void SettersPrimitiveTypes(Object dto, String attName, Object value, Class<?> columnType)
+	{
+		try
+		{
 		   // dado el attName obtengo el nombre del setter
-			String mtdName=getSetterName(attName);
-			Class[] argsType = new Class[1];
-			Method mtd = null ;
-			try{
-			   // intento obtener el metodo...
-			   argsType[0] = value.getClass();
-			   mtd = dto.getClass().getMethod(mtdName,argsType);
-		   }
-		   catch(NoSuchMethodException ex){
-			   // fallo... pruebo con el tipo primitivo
-			   argsType[0] =_wrapperToType(value.getClass());
-			   mtd = dto.getClass().getMethod(mtdName,argsType);
-		   }
-		   mtd.invoke(dto,value);
-
-		   }
-		   catch(Exception ex){
-			   ex.printStackTrace();
-			   throw new RuntimeException(ex);
-		   }
+		   String mtdName = getSetterName(attName);
+		   Class[] argsType = new Class[1];
+		   Method[] mtds = dto.getClass().getDeclaredMethods();
+		   Method mtd = null ;
+		   
+		   	try
+		   	{
+			   	// intento obtener el metodo...
+			   	argsType[0] = value.getClass();
+			   	mtd = dto.getClass().getMethod(mtdName,argsType);
+		   	}
+		   	catch(NoSuchMethodException ex)
+		   	{
+			   	// fallo... pruebo con el tipo primitivo
+			   	argsType[0] =_wrapperToType(columnType);
+			   	mtd = dto.getClass().getMethod(mtdName,argsType);
+			   	
+			   	if(columnType.equals(boolean.class))
+			   	{
+			   		if ((int)value == 0) 
+				   		value = false;
+				   	else
+				   		value = true;	
+			   	}		   		
+		   	}
+		   
+		   	mtd.invoke(dto,value);
+	    }
+	    catch(Exception ex)
+		{
+	    	ex.printStackTrace();
+	    	throw new RuntimeException(ex);
+	    }
+	}
+	
+	private static <T> void SettersEntities(Object dto, String attName, Object value, ResultSet rs, Field field, T returnedObject)
+	{
+		Object objectEntity = null;
+		String mtdName = getSetterName(attName);
+	    Class[] argsType = new Class[1];
+		Method mtd = null ;
+		
+        try 
+        {
+        	T entityResult = EntityInstance(value, field, returnedObject);
+        	
+        	// instanciar un objeto nuevo y llenar todos los campos
+        	mtdName = getSetterName(attName);
+        	argsType[0] =_wrapperToType(field.getType().newInstance().getClass());
+        	mtd = dto.getClass().getMethod(mtdName,argsType);
+        	
+        	mtd.invoke(dto,entityResult);
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+	}
+	
+	private static <T> T EntityInstance(Object value, Field field, T returnedObject)
+	{
+		ResultSet rs;
+		
+		try
+    	{
+    		Class<?> entityClass = field.getType().newInstance().getClass();
+        	String sqlQuery = SQLQuery(entityClass, (Integer)value);
+	
+			System.out.println(sqlQuery);
+	
+			// Ejecucion de la query
+			rs = db.ExecuteQuery(sqlQuery);
+				
+			if(rs==null)
+			{
+				System.out.println("Resultado NULO");
+			}
+			if(rs.next())
+			{
+				// obtengo una instancia del DTO y le seteo los datos tomados del ResultSet
+				returnedObject = GetInstance(entityClass);
+				
+				InvokeSetters(returnedObject, rs, entityClass, returnedObject);
+				// si hay otra fila entonces hay inconsistencia de datos...
+				if(rs.next())
+				{
+					throw new RuntimeException("Mas de una fila...");
+				}
+				
+				return returnedObject;
+			}
+    	}
+    	catch (Exception ex) 
+    	{
+    		ex.printStackTrace();
+    	}
+		
+		return null;
 	}
 
-	private static Class _wrapperToType(Class clazz){
+	private static Class _wrapperToType(Class clazz)
+	{
 		if(clazz.equals(Byte.class)) return Byte.TYPE;
 		if(clazz.equals(Short.class)) return Short.TYPE;
 		if(clazz.equals(Integer.class)) return Integer.TYPE;
@@ -264,10 +342,8 @@ public class MyHibernate
 
 	private static String getSetterName(String attName)
 	{
-		System.out.println("atributo: "+ attName);
+		//System.out.println("atributo: " + attName);
 		String attNameUpperLetter = attName.substring(0, 1).toUpperCase() + attName.substring(1);
-		return "set"+attNameUpperLetter;
-		
+		return "set" + attNameUpperLetter;		
 	}
-
 }
