@@ -223,6 +223,7 @@ public class MyHibernate
 			   mtd = dto.getClass().getMethod(mtdName,argsType);
 		   }
 		   mtd.invoke(dto,value);
+
 		   }
 		   catch(Exception ex){
 			   ex.printStackTrace();
