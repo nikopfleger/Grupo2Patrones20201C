@@ -26,7 +26,7 @@ public class MyHibernate
 	{
 		ResultSet rs = null;
 	    T returnedObject = null;
-	    db = new DBManager();
+	    db = new DBManager("jdbc:hsqldb:C:\\java64\\hsqldb-2.3.4\\hsqldb\\testdb;hsqldb.lock_file=false","sa","");
 	    db.Connect();
 		   
 		try
