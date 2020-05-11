@@ -75,9 +75,10 @@ public class Demo
 	   
 	   System.out.println(empleado.getIdEmpleado());
 	   System.out.println(empleado.getNombre());
+	   int counter = 1;
 	   while (empleado.getEmpleado() != null)
 	   {
-		   int counter = 1;
+		   
 		   empleado = empleado.getEmpleado();
 		   System.out.println("Subempleado " + counter);
 		   System.out.println(empleado.getIdEmpleado());
