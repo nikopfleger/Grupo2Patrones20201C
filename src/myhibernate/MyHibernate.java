@@ -15,23 +15,19 @@ import ann.Id;
 import ann.JoinColumn;
 import ann.Table;
 import database.DBManager;
-import org.hsqldb.jdbc.JDBCDataSource;
 import sun.security.jca.GetInstance;
 
 public class MyHibernate
 {
    public static <T> T find(Class<T> clazz, int id)
    {
-	   Connection c = null;
 	   ResultSet rs = null;
 	   T returnedObject = null;
-	   JDBCDataSource ds = new JDBCDataSource();
+	   DBManager db = new DBManager("jdbc:hsqldb:C:\\java64\\hsqldb-2.3.4\\hsqldb\\testdb\\testDB;hsqldb.lock_file=false","sa","");
+	   db.Connect();
+	   
 	   try
 	   {
-	   c = DriverManager.getConnection("jdbc:hsqldb:C:\\Users\\f_luc\\Documents\\java64\\hsqldb-2.3.4\\hsqldb\\testdb;hsqldb.lock_file=false","sa","");
-	   //DBManager db = new DBManager("jdbc:hsqldb:C:\\Users\\f_luc\\Documents\\java64\\hsqldb-2.3.4\\hsqldb\\testdb","sa","");
-	   Statement stmt = c.createStatement();
-	   
 		   // Armado de la query SQL
 		   String sqlQuery= "";
 		   sqlQuery += "SELECT " + GetClassFields(clazz)+" ";
@@ -39,18 +35,15 @@ public class MyHibernate
 		   sqlQuery += "WHERE "+ IDColumnName(clazz)+" = " + id;
 		   
 		   System.out.println(sqlQuery);
-
-		   // pstm.setObject(1, id);
 		   
 		   // Ejecucion de la query
-		   //rs = db.ExecuteQuery(sqlQuery);
-		   rs= stmt.executeQuery(sqlQuery);
+		   rs = db.ExecuteQuery(sqlQuery);
+
 		   if(rs== null){
-			   System.out.println("NULO");
+			   System.out.println("Objecto nulo");
 		   }
 	   	   if( rs.next() )
 	   	   {
-	   		   System.out.println("llego");
 	   	   // obtengo una instancia del DTO y le seteo los datos tomados del ResultSet
 	   	   returnedObject = GetInstance(clazz);
 	   	   InvokeSetters(returnedObject, rs, clazz);
@@ -72,7 +65,7 @@ public class MyHibernate
 	   {
 		   try
 		   {
-			   if( c!=null ) c.close();
+			   if( db!=null ) db.Close();
 		   }
 		   catch(Exception ex)
 		   {
@@ -161,6 +154,8 @@ public class MyHibernate
 			   attName = field.getAnnotation(Column.class).name(); // Esto esta MAL
 			   valueColumn = rs.getObject(field.getAnnotation(Column.class).name());
 			   
+			   System.out.println(attName);
+			   System.out.println(valueColumn);
 			   // Utilizar los setters para poner los valores a los respectivos campos
 		   }
 	   }
