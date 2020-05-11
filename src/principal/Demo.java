@@ -9,6 +9,7 @@ import Entities.Empleado;
 import Entities.Orden;
 import Entities.Producto;
 import Entities.Promocion;
+import Entities.PromocionProducto;
 import Entities.TipoCliente;
 import ann.Table;
 import myhibernate.MyHibernate;
@@ -70,31 +71,36 @@ public class Demo
 //	   System.out.println(tipoCliente.getIdTipoCliente());
 //	   System.out.println(tipoCliente.getDescripcion());
 	   
-	   Empleado empleado = new Empleado();
-	   empleado = MyHibernate.find(Empleado.class,5);
-	   
-	   System.out.println(empleado.getIdEmpleado());
-	   System.out.println(empleado.getNombre());
-	   int counter = 1;
-	   while (empleado.getEmpleado() != null)
-	   {
-		   
-		   empleado = empleado.getEmpleado();
-		   System.out.println("Subempleado " + counter);
-		   System.out.println(empleado.getIdEmpleado());
-		   System.out.println(empleado.getNombre());
-		   counter++;
-		   
-	   }
-
-	   
-
-	   
-//	   Orden orden = new Orden();
-//	   orden = MyHibernate.find(Orden.class,1);
+//	   Empleado empleado = new Empleado();
+//	   empleado = MyHibernate.find(Empleado.class,5);
 //	   
-//	   System.out.println(orden.getCliente());
-//	   System.out.println(orden.getCliente().getNombre());
-//	   System.out.println(orden.getCliente().getTipoCliente().getDescripcion());
+//	   System.out.println(empleado.getIdEmpleado());
+//	   System.out.println(empleado.getNombre());
+//	   int counter = 1;
+//	   while (empleado.getEmpleado() != null)
+//	   {
+//		   
+//		   empleado = empleado.getEmpleado();
+//		   System.out.println("Subempleado " + counter);
+//		   System.out.println(empleado.getIdEmpleado());
+//		   System.out.println(empleado.getNombre());
+//		   counter++;
+//		   
+//	   }
+
+	   
+//	   PromocionProducto promocionProducto = new PromocionProducto();
+//	   promocionProducto = MyHibernate.find(PromocionProducto.class,1);
+//	   System.out.println(promocionProducto.getIdPromocionProducto());
+//	   System.out.println(promocionProducto.getDescuento());
+//	   System.out.println(promocionProducto.getProducto());
+//	   System.out.println(promocionProducto.getPromocionVigencia());
+//	   
+	   Orden orden = new Orden();
+	   orden = MyHibernate.find(Orden.class,1);
+	   
+	   System.out.println(orden.getCliente());
+	   System.out.println(orden.getCliente().getNombre());
+	   System.out.println(orden.getCliente().getTipoCliente().getDescripcion());
    }
 }
