@@ -22,41 +22,32 @@ public class MyHibernate
 {
 	public static <T> T find(Class<T> clazz, int id)
 	{
-		Connection c=null;
-		ResultSet rs=null;
-		T returnedObject=null;
+		ResultSet rs = null;
+	    T returnedObject = null;
+	    DBManager db = new DBManager("jdbc:hsqldb:C:\\java64\\hsqldb-2.3.4\\hsqldb\\testdb\\testDB;hsqldb.lock_file=false","sa","");
+	    db.Connect();
+		   
 		try
 		{
-			c=DriverManager.getConnection("jdbc:hsqldb:C:\\Users\\f_luc\\Documents\\java64\\hsqldb-2.3.4\\hsqldb\\testdb;hsqldb.lock_file=false","sa","");
-			// DBManager db = new
-			// DBManager("jdbc:hsqldb:C:\\Users\\f_luc\\Documents\\java64\\hsqldb-2.3.4\\hsqldb\\testdb","sa","");
-			Statement stmt=c.createStatement();
-
 			// Armado de la query SQL
-			String sqlQuery="";
-			sqlQuery+="SELECT "+GetClassFields(clazz)+" ";
-			sqlQuery+="FROM "+GetTableName(clazz)+" ";
-			sqlQuery+="WHERE "+IDColumnName(clazz)+" = "+id;
+			String sqlQuery = SQLQuery(clazz, id);
 
 			System.out.println(sqlQuery);
 
-			// pstm.setObject(1, id);
-
 			// Ejecucion de la query
-			// rs = db.ExecuteQuery(sqlQuery);
-			rs=stmt.executeQuery(sqlQuery);
+			rs = db.ExecuteQuery(sqlQuery);
+			
 			if(rs==null)
 			{
-				System.out.println("NULO");
+				System.out.println("Resultado NULO");
 			}
 			if(rs.next())
 			{
-				// obtengo una instancia del DTO y le seteo los datos tomados
-				// del ResultSet
+				// obtengo una instancia del DTO y le seteo los datos tomados del ResultSet
 				returnedObject=GetInstance(clazz);
-				System.out.println(returnedObject.toString());
+				
 				InvokeSetters(returnedObject,rs,clazz);
-				// si hay otra fi la entonces hay inconsistencia de datos...
+				// si hay otra fila entonces hay inconsistencia de datos...
 				if(rs.next())
 				{
 					throw new RuntimeException("Mas de una fila...");
@@ -74,7 +65,7 @@ public class MyHibernate
 		{
 			try
 			{
-				if(c!=null) c.close();
+				if( db!=null ) db.Close();
 			}
 			catch(Exception ex)
 			{
@@ -94,6 +85,41 @@ public class MyHibernate
 	{
 		// PROGRAMAR AQUI
 		return null;
+	}
+	
+	private static <T> String SQLQuery(Class<T> clazz, int id) 
+	{
+		// Armado de la query SQL
+		String sqlQuery="";
+		sqlQuery += "SELECT " + GetClassFields(clazz) + "\n";
+		sqlQuery += "FROM " + GetTableName(clazz) + "\n";
+		sqlQuery += SQLQueryJoins(clazz);
+		sqlQuery += "WHERE " + IDColumnName(clazz) + " = " + id + "\n";
+	
+		return sqlQuery;
+	}
+	
+	private static <T> String SQLQueryJoins(Class<T> dto)
+	{
+		Field[] fields = dto.getDeclaredFields();
+		String tableName = dto.getAnnotation(Table.class).name();
+		String columnNameId = "";
+		String sqlQueryWithJoins = "";
+		
+		for (Field field : fields) {
+			if (field.isAnnotationPresent(Id.class))
+            	columnNameId = field.getAnnotation(Column.class).name();
+
+            if (field.isAnnotationPresent(JoinColumn.class)) {
+                String columnIdFK = field.getAnnotation(JoinColumn.class).name();
+                Class<?> fieldType = field.getType();
+                String tableFieldName = fieldType.getAnnotation(Table.class).name();
+                
+                sqlQueryWithJoins += "JOIN " + tableFieldName + " ON " + tableName + "." + columnIdFK + " = " + tableFieldName + "." + columnIdFK + "\n";
+            }
+        }
+
+		return sqlQueryWithJoins;
 	}
 
 	private static <T> T GetInstance(Class<T> dtoClass)
@@ -167,10 +193,6 @@ public class MyHibernate
 	private static void InvokeSetters(Object dto, ResultSet rs, Class dtoClass)
 	{
 		Field[] fields=dtoClass.getDeclaredFields();
-		for(Field f:fields)
-		{
-			System.out.println(f.getName());
-		}
 		Object valueColumn = null;
 		String attName="";
 
@@ -178,8 +200,6 @@ public class MyHibernate
 		{
 			for(Field field:fields)
 			{
-				// attName = field.getAnnotation(Column.class).name(); // Esto
-				// esta MAL
 				attName = field.getName();
 				if(field.getAnnotation(Column.class)!=null)
 				{

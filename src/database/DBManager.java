@@ -15,7 +15,6 @@ public class DBManager
 		Password = password;
 		
 		try {
-			// org.hsqldb.jdbcDriver - capitulo 15 - Java a Fondo
 			Class.forName("org.hsqldb.jdbc.JDBCDriver");
 		} catch (Exception e) {
 			e.printStackTrace();

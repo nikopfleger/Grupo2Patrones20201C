@@ -5,7 +5,6 @@ import ann.Entity;
 import ann.Id;
 import ann.Table;
 
-
 @Entity
 @Table(name="promocion")
 public class Promocion
@@ -25,7 +24,7 @@ public class Promocion
 	
 	public int getIdPromocion()
 	{
-		return this.getIdPromocion();
+		return this.idPromocion;
 	}
 	
 	public void setDescripcion(String descripcion)

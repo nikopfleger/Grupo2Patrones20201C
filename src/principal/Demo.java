@@ -36,9 +36,11 @@ public class Demo
 //      {
 //         System.out.println(px.getDescripcion()+", "+px.getProveedor().getEmpresa());         
 //      }
-      
+       Promocion promo = new Promocion();
+       promo = MyHibernate.find(Promocion.class,1);
     
-	   System.out.println(MyHibernate.find(Promocion.class,1).getDescripcion());
+	   System.out.println(promo.getIdPromocion());
+	   System.out.println(promo.getDescripcion());
 	   
    }
 }

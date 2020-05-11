@@ -10,7 +10,6 @@ import ann.Table;
 import Entities.Cliente;
 import Entities.Empleado;
 
-
 @Entity
 @Table(name="orden")
 public class Orden

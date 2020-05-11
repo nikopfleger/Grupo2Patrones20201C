@@ -4,8 +4,10 @@ import ann.Column;
 import ann.Entity;
 import ann.Id;
 import ann.ManyToOne;
+import ann.Table;
 
 @Entity
+@Table(name="proveedor_categoria")
 public class ProveedorCategoria
 {
 	@Id
