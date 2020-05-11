@@ -11,19 +11,19 @@ public class TipoCliente
 {
 	@Id
 	@Column(name="id_tipo_cliente")
-	private int id_tipo_cliente;
+	private int idTipoCliente;
 	
 	@Column(name="descripcion")
 	private String descripcion;
 	
 	public int getIdTipoCliente()
 	{
-		return id_tipo_cliente;
+		return idTipoCliente;
 	}
 
-	public void setIdTipoCliente(int id_tipo_cliente)
+	public void setIdTipoCliente(int idTipoCliente)
 	{
-		this.id_tipo_cliente=id_tipo_cliente;
+		this.idTipoCliente=idTipoCliente;
 	}
 
 	public String getDescripcion()

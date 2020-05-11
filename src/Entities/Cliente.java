@@ -60,9 +60,10 @@ public class Cliente
    {
       return tipoCliente;
    }
-
-   public void setProveedor(TipoCliente tipoCliente)
+   
+   public void setTipoCliente(TipoCliente tipoCliente)
    {
-      this.tipoCliente=tipoCliente;
+	   this.tipoCliente=tipoCliente;
    }
+
 }
