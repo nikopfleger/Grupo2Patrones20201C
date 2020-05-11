@@ -26,7 +26,7 @@ public class MyHibernate
 	{
 		ResultSet rs = null;
 	    T returnedObject = null;
-	    db = new DBManager("jdbc:hsqldb:C:\\java64\\hsqldb-2.3.4\\hsqldb\\testdb\\testDB;hsqldb.lock_file=false","sa","");
+	    db = new DBManager("jdbc:hsqldb:C:\\java64\\hsqldb-2.3.4\\hsqldb\\testdb;hsqldb.lock_file=false","sa","");
 	    db.Connect();
 		   
 		try
@@ -39,7 +39,7 @@ public class MyHibernate
 			// Ejecucion de la query
 			rs = db.ExecuteQuery(sqlQuery);
 			
-			if(rs==null)
+			if(rs == null)
 			{
 				System.out.println("Resultado NULO");
 			}
@@ -92,36 +92,49 @@ public class MyHibernate
 	private static <T> String SQLQuery(Class<T> clazz, int id) 
 	{
 		// Armado de la query SQL
+		
+	
+		
 		String sqlQuery="";
-		sqlQuery += "SELECT " + GetClassFields(clazz) + "\n";
-		sqlQuery += "FROM " + GetTableName(clazz) + "\n";
+		String alias = "a0";
+		sqlQuery += "SELECT " + GetClassFields(clazz,alias + ".") + "\n";
+		sqlQuery += "FROM " + GetTableName(clazz) + " " + alias + "\n";
 		sqlQuery += SQLQueryJoins(clazz);
-		sqlQuery += "WHERE " + IDColumnName(clazz) + " = " + id + "\n";
+		sqlQuery += "WHERE " + alias + "." + IDColumnName(clazz) + " = " + id + "\n";
 	
 		return sqlQuery;
 	}
 	
 	private static <T> String SQLQueryJoins(Class<T> dto)
 	{
+		int counter = 1;
 		Field[] fields = dto.getDeclaredFields();
 		String tableName = dto.getAnnotation(Table.class).name();
 		String columnNameId = "";
 		String sqlQueryWithJoins = "";
 		
 		for (Field field : fields) {
-			if (field.isAnnotationPresent(Id.class))
-            	columnNameId = field.getAnnotation(Column.class).name();
+//			if (field.isAnnotationPresent(Id.class))
+//            	columnNameId = field.getAnnotation(Column.class).name();
 
             if (field.isAnnotationPresent(JoinColumn.class)) 
             {
                 String columnIdFK = field.getAnnotation(JoinColumn.class).name();
-                Class<?> fieldType = field.getType();
+            	Class<?> fieldType = field.getType();
                 String tableFieldName = fieldType.getAnnotation(Table.class).name();
                 
-                sqlQueryWithJoins += "JOIN " + tableFieldName + " ON " + tableName + "." + columnIdFK + " = " + tableFieldName + "." + columnIdFK + "\n";
+                Field[] fieldsJoin = fieldType.getDeclaredFields();
+                for (Field f : fieldsJoin)
+                {
+                	if (f.isAnnotationPresent(Id.class))
+                		columnNameId = f.getAnnotation(Column.class).name();
+                }
+                
+                sqlQueryWithJoins += "LEFT JOIN " + tableFieldName + " a" + counter + " ON " + "a0." + columnIdFK + " = " + "a" + counter + "." + columnNameId + "\n";
+                counter++;
             }
-        }
-
+		
+		} 
 		return sqlQueryWithJoins;
 	}
 
@@ -138,7 +151,7 @@ public class MyHibernate
 		}
 	}
 
-	private static String GetClassFields(Class dto)
+	private static String GetClassFields(Class dto, String alias)
 	{
 		Field[] fields=dto.getDeclaredFields();
 		String fieldsConcat="";
@@ -161,7 +174,7 @@ public class MyHibernate
 					fieldName=fields[i].getName();
 			}
 			
-			fieldsConcat += fieldName + ((i<fields.length-1)?", ":"");
+			fieldsConcat += alias + fieldName + ((i<fields.length-1)?", ":"");
 		}
 
 		return fieldsConcat;
