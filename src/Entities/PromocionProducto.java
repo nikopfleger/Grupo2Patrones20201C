@@ -2,7 +2,7 @@ package Entities;
 
 import ann.Column;
 import ann.Entity;
-//import ann.Id;
+import ann.Id;
 import ann.JoinColumn;
 import ann.ManyToOne;
 import ann.Table;
@@ -13,6 +13,11 @@ import Entities.PromocionVigencia;
 @Table(name="promocion_producto")
 public class PromocionProducto
 {
+	
+	@Id
+	@Column(name="id_promocion_producto")
+	private int idPromocionProducto;
+	
 	@ManyToOne
 	@JoinColumn(name="id_promocion_vigencia")
 	private PromocionVigencia promocionVigencia;
@@ -23,6 +28,16 @@ public class PromocionProducto
 	
 	@Column(name="descuento")
 	private float descuento;
+	
+	public int getIdPromocionProducto()
+	{
+		return this.idPromocionProducto;
+	}
+	
+	public void setIdPromocionProducto(int idPromocionProducto)
+	{
+		this.idPromocionProducto = idPromocionProducto;
+	}
 	
 	public PromocionVigencia getPromocionVigencia()
 	{
