@@ -92,9 +92,6 @@ public class MyHibernate
 	private static <T> String SQLQuery(Class<T> clazz, int id) 
 	{
 		// Armado de la query SQL
-		
-	
-		
 		String sqlQuery="";
 		String alias = "a0";
 		sqlQuery += "SELECT " + GetClassFields(clazz,alias + ".") + "\n";
@@ -113,10 +110,8 @@ public class MyHibernate
 		String columnNameId = "";
 		String sqlQueryWithJoins = "";
 		
-		for (Field field : fields) {
-//			if (field.isAnnotationPresent(Id.class))
-//            	columnNameId = field.getAnnotation(Column.class).name();
-
+		for (Field field : fields) 
+		{
             if (field.isAnnotationPresent(JoinColumn.class)) 
             {
                 String columnIdFK = field.getAnnotation(JoinColumn.class).name();
@@ -133,8 +128,8 @@ public class MyHibernate
                 sqlQueryWithJoins += "LEFT JOIN " + tableFieldName + " a" + counter + " ON " + "a0." + columnIdFK + " = " + "a" + counter + "." + columnNameId + "\n";
                 counter++;
             }
-		
 		} 
+		
 		return sqlQueryWithJoins;
 	}
 
@@ -306,32 +301,35 @@ public class MyHibernate
 		
 		try
     	{
-    		Class<?> entityClass = field.getType().newInstance().getClass();
-        	String sqlQuery = SQLQuery(entityClass, (Integer)value);
-	
-			System.out.println(sqlQuery);
-	
-			// Ejecucion de la query
-			rs = db.ExecuteQuery(sqlQuery);
-				
-			if(rs==null)
+			if (value != null) 
 			{
-				System.out.println("Resultado NULO");
-			}
-			if(rs.next())
-			{
-				// obtengo una instancia del DTO y le seteo los datos tomados del ResultSet
-				returnedObject = GetInstance(entityClass);
-				
-				InvokeSetters(returnedObject, rs, entityClass, returnedObject);
-				// si hay otra fila entonces hay inconsistencia de datos...
+				Class<?> entityClass = field.getType().newInstance().getClass();
+	        	String sqlQuery = SQLQuery(entityClass, (Integer)value);
+		
+				System.out.println(sqlQuery);
+		
+				// Ejecucion de la query
+				rs = db.ExecuteQuery(sqlQuery);
+					
+				if(rs==null)
+				{
+					System.out.println("Resultado NULO");
+				}
 				if(rs.next())
 				{
-					throw new RuntimeException("Mas de una fila...");
-				}
-				
-				return returnedObject;
-			}
+					// obtengo una instancia del DTO y le seteo los datos tomados del ResultSet
+					returnedObject = GetInstance(entityClass);
+					
+					InvokeSetters(returnedObject, rs, entityClass, returnedObject);
+					// si hay otra fila entonces hay inconsistencia de datos...
+					if(rs.next())
+					{
+						throw new RuntimeException("Mas de una fila...");
+					}
+					
+					return returnedObject;
+				}				
+			}    		
     	}
     	catch (Exception ex) 
     	{
