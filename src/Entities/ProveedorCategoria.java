@@ -16,11 +16,11 @@ public class ProveedorCategoria
 	
 	@ManyToOne
 	@Column(name="id_proveedor")
-	private int idProveedor;
+	private Proveedor proveedor;
 	
 	@ManyToOne
 	@Column(name="id_categoria")
-	private int idCategoria;
+	private Categoria categoria;
 
 	public int getIdProveedorCategoria()
 	{
@@ -32,24 +32,24 @@ public class ProveedorCategoria
 		this.idProveedorCategoria=idProveedorCategoria;
 	}
 
-	public int getIdProveedor()
+	public Proveedor getProveedor()
 	{
-		return idProveedor;
+		return proveedor;
 	}
 
-	public void setIdProveedor(int idProveedor)
+	public void setProveedor(Proveedor proveedor)
 	{
-		this.idProveedor=idProveedor;
+		this.proveedor=proveedor;
 	}
 
-	public int getIdCategoria()
+	public Categoria getCategoria()
 	{
-		return idCategoria;
+		return categoria;
 	}
 
-	public void setIdCategoria(int idCategoria)
+	public void setCategoria(Categoria categoria)
 	{
-		this.idCategoria=idCategoria;
+		this.categoria = categoria;
 	}
 	
 }

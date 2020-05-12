@@ -79,7 +79,6 @@ public class Producto
    {
       this.unidadesReposicion=unidadesReposicion;
    }
-
    
    public int getIdProducto()
    {
