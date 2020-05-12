@@ -4,6 +4,9 @@ import java.sql.*;
 
 public class DBManager
 {
+	private String DB_URL;
+	private String User;
+	private String Password;
 	private Connection conn = null;
 	
 	public void Connect() {

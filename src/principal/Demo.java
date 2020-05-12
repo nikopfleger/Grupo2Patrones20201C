@@ -9,6 +9,7 @@ import Entities.Empleado;
 import Entities.Orden;
 import Entities.Producto;
 import Entities.Promocion;
+import Entities.PromocionProducto;
 import Entities.TipoCliente;
 import ann.Table;
 import myhibernate.MyHibernate;
@@ -85,7 +86,15 @@ public class Demo
 //		   System.out.println(empleado.getNombre());
 //		   counter++;
 //	   }
+
 	   
+//	   PromocionProducto promocionProducto = new PromocionProducto();
+//	   promocionProducto = MyHibernate.find(PromocionProducto.class,1);
+//	   System.out.println(promocionProducto.getIdPromocionProducto());
+//	   System.out.println(promocionProducto.getDescuento());
+//	   System.out.println(promocionProducto.getProducto());
+//	   System.out.println(promocionProducto.getPromocionVigencia());
+//	   
 	   Orden orden = new Orden();
 	   orden = MyHibernate.find(Orden.class,1);
 	   
