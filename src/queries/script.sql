@@ -198,6 +198,7 @@ insert into orden (id_orden, id_cliente, id_empleado, fecha_generada, fecha_entr
 values(1,1,2,'2014-02-14', '2014-02-20')
 values(2,2,3,'2020-01-01', '2020-03-01')
 
+INSERT INTO DETALLE_ORDEN values (1,1,1,10)
 
 
 
