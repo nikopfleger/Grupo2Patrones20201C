@@ -61,10 +61,9 @@ public class Demo
 //	   detalleOrden = MyHibernate.find(DetalleOrden.class,1);
 //	   System.out.println(detalleOrden.getIdDetalleOrden());
 //	   System.out.println(detalleOrden.getCantidad());
-//	   System.out.println(detalleOrden.getCliente());
-//	   System.out.println(detalleOrden.getCliente().getNombre());
 //	   System.out.println(detalleOrden.getProducto());
 //	   System.out.println(detalleOrden.getProducto().getDescripcion());
+//	   System.out.println(detalleOrden.getOrden().getCliente());
 	   
 	   // Empleado
 //	   Empleado empleado = new Empleado();
@@ -122,9 +121,9 @@ public class Demo
 //	   System.out.println(promoProducto.getProducto());
 //	   System.out.println(promoProducto.getProducto().getDescripcion());
 	   
-	   // PromocionVigencia - ERROR
+	   // PromocionVigencia
 //	   PromocionVigencia promoVigencia = new PromocionVigencia();
-//	   promoVigencia = MyHibernate.find(PromocionVigencia.class,1);
+//	   promoVigencia = MyHibernate.find(PromocionVigencia.class,10);
 //	   System.out.println(promoVigencia.getIdPromocionVigencia());
 //	   System.out.println(promoVigencia.getFechaInicio());
 //	   System.out.println(promoVigencia.getPromocion().getDescripcion());
@@ -137,7 +136,7 @@ public class Demo
 //	   System.out.println(proveedor.getContacto());
 //	   System.out.println(proveedor.getDireccion());
 	   
-	   // ProveedorCategoria - ERROR
+	   // ProveedorCategoria
 //	   ProveedorCategoria proveedorCategoria = new ProveedorCategoria();
 //	   proveedorCategoria = MyHibernate.find(ProveedorCategoria.class,1);
 //	   System.out.println(proveedorCategoria.getIdProveedorCategoria());

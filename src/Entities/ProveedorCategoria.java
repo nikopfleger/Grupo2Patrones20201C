@@ -3,6 +3,7 @@ package Entities;
 import ann.Column;
 import ann.Entity;
 import ann.Id;
+import ann.JoinColumn;
 import ann.ManyToOne;
 import ann.Table;
 
@@ -15,11 +16,11 @@ public class ProveedorCategoria
 	private int idProveedorCategoria;
 	
 	@ManyToOne
-	@Column(name="id_proveedor")
+	@JoinColumn(name="id_proveedor")
 	private Proveedor proveedor;
 	
 	@ManyToOne
-	@Column(name="id_categoria")
+	@JoinColumn(name="id_categoria")
 	private Categoria categoria;
 
 	public int getIdProveedorCategoria()
