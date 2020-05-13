@@ -13,14 +13,14 @@ public class DetalleOrden
 {
 	@Id
 	@Column(name="id_detalle_orden")
-	private int id_detalle_orden;
+	private int idDetalleOrden;
 	
 	@Column(name="cantidad")
 	private int cantidad;
 	
 	@ManyToOne
 	@JoinColumn(name="id_orden")
-	private Cliente cliente;
+	private Orden orden;
 	
 	@ManyToOne
 	@JoinColumn(name="id_producto")
@@ -28,12 +28,12 @@ public class DetalleOrden
 	
 	public int getIdDetalleOrden()
 	{
-		return id_detalle_orden;
+		return idDetalleOrden;
 	}
 
-	public void setIdDetalleOrden(int id_detalle_orden)
+	public void setIdDetalleOrden(int idDetalleOrden)
 	{
-		this.id_detalle_orden=id_detalle_orden;
+		this.idDetalleOrden=idDetalleOrden;
 	}
 	
 	public int getCantidad()
@@ -46,14 +46,14 @@ public class DetalleOrden
 		this.cantidad=cantidad;
 	}
 	
-	public Cliente getCliente()
+	public Orden getOrden()
 	{
-		return cliente;
+		return orden;
 	}
 
-	public void setCliente(Cliente cliente)
+	public void setOrden(Orden orden)
 	{
-		this.cliente=cliente;
+		this.orden=orden;
 	}
 	
 	public Producto getProducto()
