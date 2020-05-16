@@ -37,8 +37,105 @@ public class Demo
 //      }
 	   
 	   PruebaFindEntidades();
+	   
+	   PruebaFindAllEntidades();
    }
    
+   private static void PruebaFindAllEntidades()
+   {
+	   // Categoria
+//	   List<Categoria> lstCat = MyHibernate.findAll(Categoria.class);
+//       for(Categoria cx:lstCat)
+//       {
+//          System.out.println(cx.getIdCategoria()+ ", " + cx.getDescripcion());         
+//       }
+       
+       //Cliente
+//       List<Cliente> lstCli = MyHibernate.findAll(Cliente.class);
+//       for(Cliente clx:lstCli)
+//       {
+//          System.out.println(clx.getNombre() + ", " + clx.getDireccion());
+//          System.out.println(clx.getTipoCliente() + ", " + clx.getTipoCliente().getDescripcion());
+//       }
+       
+	   // DetalleOrden
+//	   List<DetalleOrden> lstDetOrd = MyHibernate.findAll(DetalleOrden.class);
+//       for(DetalleOrden dox:lstDetOrd)
+//       {
+//          System.out.println(dox.getIdDetalleOrden() + ", " + dox.getCantidad());
+//          System.out.println(dox.getOrden() + ", " + dox.getOrden().getIdOrden());
+//          System.out.println(dox.getProducto() + ", " + dox.getProducto().getDescripcion());
+//       }
+       
+	   // Empleado
+//	   List<Empleado> lstEmp = MyHibernate.findAll(Empleado.class);
+//	   for(Empleado ex:lstEmp)
+//       {
+//		   System.out.println(ex.getIdEmpleado() + ", " + ex.getNombre());
+//       }
+	   
+	   // Orden
+//	   List<Orden> lstOrd = MyHibernate.findAll(Orden.class);
+//	   for(Orden ox:lstOrd)
+//       {
+//		   System.out.println(ox.getIdOrden() + ", " + ox.getFechaEntregada() + ", " + ox.getFechaGenerada());
+//		   System.out.println(ox.getCliente() + ", " + ox.getCliente().getNombre());
+//		   System.out.println(ox.getEmpleado() + ", " + ox.getEmpleado().getNombre());
+//       }
+	   
+	   // Producto
+//	   List<Producto> lstProd = MyHibernate.findAll(Producto.class);
+//       for(Producto px:lstProd)
+//       {
+//          System.out.println(px.getDescripcion() + ", " + px.getProveedor().getEmpresa());         
+//       }
+	   
+	// Promocion
+//	   List<Promocion> lstProm = MyHibernate.findAll(Promocion.class);
+//       for(Promocion prx:lstProm)
+//       {
+//	        System.out.println(prx.getIdPromocion() + ", " + prx.getDescripcion());         
+//       }
+	   
+	   // PromocionProducto - ERROR
+//	   List<PromocionProducto> lstPromProd = MyHibernate.findAll(PromocionProducto.class);
+//       for(PromocionProducto prmpx:lstPromProd)
+//       {
+//	        System.out.println(prmpx.getIdPromocionProducto() + ", " + prmpx.getDescuento());
+//	        System.out.println(prmpx.getProducto() + ", " + prmpx.getProducto().getDescripcion());
+//	        System.out.println(prmpx.getPromocionVigencia() + ", " + prmpx.getPromocionVigencia().getIdPromocionVigencia());
+//       }
+	   
+	   // PromocionVigencia
+//	   List<PromocionVigencia> lstPromVig = MyHibernate.findAll(PromocionVigencia.class);
+//       for(PromocionVigencia prmvig:lstPromVig)
+//       {
+//	        System.out.println(prmvig.getIdPromocionVigencia() + ", " + prmvig.getFechaInicio() + ", " + prmvig.getFechaFin());
+//	        System.out.println(prmvig.getPromocion() + ", " + prmvig.getPromocion().getDescripcion());
+//       }
+	   
+	   // Proveedor
+//	   List<Proveedor> lstProv = MyHibernate.findAll(Proveedor.class);
+//       for(Proveedor provx:lstProv)
+//       {
+//	        System.out.println(provx.getIdProveedor() + ", " + provx.getContacto() + ", " + provx.getDireccion() + ", " + provx.getEmpresa());
+//       }
+	   
+	   // ProveedorCategoria
+//	   List<ProveedorCategoria> lstProvCat = MyHibernate.findAll(ProveedorCategoria.class);
+//       for(ProveedorCategoria provcatx:lstProvCat)
+//       {
+//	        System.out.println(provcatx.getIdProveedorCategoria() + ", " + provcatx.getCategoria().getDescripcion() + ", " + provcatx.getProveedor().getContacto());
+//       }
+	   
+	   // TipoCliente
+//	   List<TipoCliente> lstTipoCli = MyHibernate.findAll(TipoCliente.class);
+//       for(TipoCliente tipoclix:lstTipoCli)
+//       {
+//	        System.out.println(tipoclix.getIdTipoCliente() + ", " + tipoclix.getDescripcion());
+//       }
+   }
+
    private static void PruebaFindEntidades() 
    {
 	   // Categoria

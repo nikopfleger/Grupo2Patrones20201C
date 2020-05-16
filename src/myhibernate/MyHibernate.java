@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import Entities.Producto;
@@ -32,28 +33,22 @@ public class MyHibernate
 		try
 		{
 			// Armado de la query SQL
-			String sqlQuery = SQLQuery(clazz, id);
-
-			System.out.println(sqlQuery);
+			String sqlQuery = SQLQueryWithId(clazz, id);
+//			System.out.println(sqlQuery);
 
 			// Ejecucion de la query
 			rs = db.ExecuteQuery(sqlQuery);
 			
-			if(rs == null)
-			{
-				System.out.println("Resultado NULO");
-			}
+			if(rs == null) System.out.println("Resultado NULO");
 			if(rs.next())
 			{
 				// obtengo una instancia del DTO y le seteo los datos tomados del ResultSet
-				returnedObject = GetInstance(clazz);
-				
+				returnedObject = GetInstance(clazz);				
 				InvokeSetters(returnedObject,rs,clazz,returnedObject);
+				
 				// si hay otra fila entonces hay inconsistencia de datos...
-				if(rs.next())
-				{
-					throw new RuntimeException("Mas de una fila...");
-				}
+				if(rs.next()) throw new RuntimeException("Mas de una fila...");
+				
 				return returnedObject;
 			}
 			return null;
@@ -79,8 +74,50 @@ public class MyHibernate
 
 	public static <T> List<T> findAll(Class<T> clazz)
 	{
-		// PROGRAMAR AQUI
-		return null;
+		ResultSet rs = null;
+	    List<T> listReturned = new ArrayList<T>();
+	    T returnedObject = null;
+	    db = new DBManager();
+	    db.Connect();
+		   
+		try
+		{
+			// Armado de la query SQL
+			String sqlQuery = SQLQuery(clazz);
+//			System.out.println(sqlQuery);
+
+			// Ejecucion de la query
+			rs = db.ExecuteQuery(sqlQuery);
+			
+			if(rs == null) System.out.println("Tabla Vacia");
+			do{
+				returnedObject = null;
+				if(rs.next())
+				{
+					returnedObject = GetInstance(clazz);
+					InvokeSetters(returnedObject,rs,clazz,returnedObject);
+					if (returnedObject != null) listReturned.add(returnedObject);
+				}
+	        } while (returnedObject != null);
+			return listReturned;
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		}
+		finally
+		{
+			try
+			{
+				if(db != null) db.Close();
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
+				throw new RuntimeException(ex);
+			}
+		}
 	}
 
 	public static Query createQuery(String hql)
@@ -89,7 +126,7 @@ public class MyHibernate
 		return null;
 	}
 	
-	private static <T> String SQLQuery(Class<T> clazz, int id) 
+	private static <T> String SQLQuery(Class<T> clazz) 
 	{
 		// Armado de la query SQL
 		String sqlQuery="";
@@ -97,6 +134,16 @@ public class MyHibernate
 		sqlQuery += "SELECT " + GetClassFields(clazz,alias + ".") + "\n";
 		sqlQuery += "FROM " + GetTableName(clazz) + " " + alias + "\n";
 		sqlQuery += SQLQueryJoins(clazz);
+	
+		return sqlQuery;
+	}
+	
+	private static <T> String SQLQueryWithId(Class<T> clazz, int id) 
+	{
+		// Armado de la query SQL
+		String sqlQuery="";
+		String alias = "a0";
+		sqlQuery += SQLQuery(clazz);
 		sqlQuery += "WHERE " + alias + "." + IDColumnName(clazz) + " = " + id + "\n";
 	
 		return sqlQuery;
@@ -304,9 +351,9 @@ public class MyHibernate
 			if (value != null) 
 			{
 				Class<?> entityClass = field.getType().newInstance().getClass();
-	        	String sqlQuery = SQLQuery(entityClass, (Integer)value);
+	        	String sqlQuery = SQLQueryWithId(entityClass, (Integer)value);
 		
-				System.out.println(sqlQuery);
+//				System.out.println(sqlQuery);
 		
 				// Ejecucion de la query
 				rs = db.ExecuteQuery(sqlQuery);
