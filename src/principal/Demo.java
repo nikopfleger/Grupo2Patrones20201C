@@ -139,10 +139,10 @@ public class Demo
    private static void PruebaFindEntidades() 
    {
 	   // Categoria
-//	   Categoria categoria = new Categoria();
-//	   categoria = MyHibernate.find(Categoria.class,1);
-//	   System.out.println(categoria.getIdCategoria());
-//	   System.out.println(categoria.getDescripcion());
+	   Categoria categoria = new Categoria();
+	   categoria = MyHibernate.find(Categoria.class,1);
+	   System.out.println(categoria.getIdCategoria());
+	   System.out.println(categoria.getDescripcion());
 	   
 	   // Cliente
 //	   Cliente cliente = new Cliente();

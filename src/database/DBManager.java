@@ -1,17 +1,18 @@
 package database;
 
 import java.sql.*;
+import MyHibernateProperties.HibernatePropertyValues;
 
 public class DBManager
 {
-	private String DB_URL;
-	private String User;
-	private String Password;
 	private Connection conn = null;
 	
 	public void Connect() {
 		try {
-			conn = DriverManager.getConnection("jdbc:hsqldb:C:\\java64\\hsqldb-2.3.4\\hsqldb\\testdb;hsqldb.lock_file=false");
+			HibernatePropertyValues properties = new HibernatePropertyValues();
+			String db_url_prop = properties.getPropValues("db_url");
+
+			conn = DriverManager.getConnection(db_url_prop);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

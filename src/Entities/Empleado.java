@@ -20,7 +20,7 @@ public class Empleado
 	
 	@ManyToOne
 	@JoinColumn(name="id_jefe")
-	private Empleado empleado;
+	private Empleado jefe;
 	
 	public int getIdEmpleado()
 	{
@@ -42,13 +42,13 @@ public class Empleado
 		this.nombre=nombre;
 	}
 	
-	public Empleado getEmpleado()
+	public Empleado getJefe()
 	{
-		return empleado;
+		return jefe;
 	}
 
-	public void setEmpleado(Empleado empleado)
+	public void setJefe(Empleado jefe)
 	{
-		this.empleado=empleado;
+		this.jefe=jefe;
 	}
 }
