@@ -154,6 +154,7 @@ public class MyHibernate
 	
 	private static <T> String SQLQueryJoinFields(Class<T> dto)
 	{
+		int counter2 = 0;
 		int counter = 1;
 		Field[] fields = dto.getDeclaredFields();
 		String tableName = dto.getAnnotation(Table.class).name();
@@ -165,6 +166,11 @@ public class MyHibernate
 		{
             if (field.isAnnotationPresent(JoinColumn.class)) 
             {
+            	if (counter2 != counter)
+            	{
+            		joinFields = joinFields + ", ";
+            		counter2++;
+            	}
                 String columnIdFK = field.getAnnotation(JoinColumn.class).name();
             	Class<?> fieldType = field.getType();
                 String tableFieldName = fieldType.getAnnotation(Table.class).name();
@@ -185,10 +191,6 @@ public class MyHibernate
         					fieldName=fieldsJoin[i].getDeclaredAnnotation(JoinColumn.class).name();
         				else
         					fieldName=fieldsJoin[i].getName();
-        			}
-        			if (joinFields.isEmpty())
-        			{
-        				joinFields = ", ";
         			}
         			joinFields += "a" + counter + "." + fieldName + " as " + "a" + counter + fieldName + ((i<fieldsJoin.length-1)?", ":"");
                 }
