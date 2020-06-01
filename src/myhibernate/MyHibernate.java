@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import Entities.Producto;
@@ -22,7 +23,9 @@ import sun.security.jca.GetInstance;
 public class MyHibernate
 {
 	private static DBManager db;
+	private static HashMap<String,String> joinHm;
 	
+
 	public static <T> T find(Class<T> clazz, int id)
 	{
 		ResultSet rs = null;
@@ -143,6 +146,8 @@ public class MyHibernate
 	private static <T> String SQLQueryWithId(Class<T> clazz, int id) 
 	{
 		// Armado de la query SQL
+		if (joinHm == null)
+			joinHm = new HashMap<String,String>();
 		String sqlQuery="";
 		String alias = "a0";
 		sqlQuery += SQLQuery(clazz);
@@ -224,7 +229,8 @@ public class MyHibernate
                 	if (f.isAnnotationPresent(Id.class))
                 		columnNameId = f.getAnnotation(Column.class).name();
                 }
-                
+
+                joinHm.put(tableFieldName,"a" + counter);
                 sqlQueryWithJoins += "LEFT JOIN " + tableFieldName + " a" + counter + " ON " + "a0." + columnIdFK + " = " + "a" + counter + "." + columnNameId + "\n";
                 counter++;
             }
@@ -309,6 +315,7 @@ public class MyHibernate
 				// Utilizar los setters para poner los valores a las respectivas propiedades
 				attName = field.getName();
 				columnType = field.getType();
+				
 				if(field.getAnnotation(Column.class) != null)
 				{
 
@@ -319,7 +326,8 @@ public class MyHibernate
 				{
 					if(field.getDeclaredAnnotation(JoinColumn.class) != null)
 					{ 
-						valueColumn = rs.getObject("a1" + field.getAnnotation(JoinColumn.class).name());
+						String joinAlias = joinHm.get(columnType.getAnnotation(Table.class).name());
+						valueColumn = rs.getObject(joinAlias + field.getAnnotation(JoinColumn.class).name());
 						SettersEntities(dto, attName, valueColumn, rs, field, returnedObject);
 					}
 				}
@@ -458,4 +466,5 @@ public class MyHibernate
 		String attNameUpperLetter = attName.substring(0, 1).toUpperCase() + attName.substring(1);
 		return "set" + attNameUpperLetter;		
 	}
+
 }
