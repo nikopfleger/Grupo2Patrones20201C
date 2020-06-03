@@ -16,13 +16,11 @@ public class MyInterceptor
             Class type = field.getType();
 
             if (campo == null) {
-//                Orden o = new Orden();
-//                o.setIdOrden(42);
             	Class clasePadre = self.getClass();
             	String methodName = armaGetter(type.getSimpleName());
             	Method mtd = clasePadre.getMethod(methodName);
             	int id = (int) mtd.invoke(self);
-            	System.out.println(id);
+//            	System.out.println(id);
                 field.set(self, MyHibernate.find(type,id));
             }
         } catch (Exception e) {

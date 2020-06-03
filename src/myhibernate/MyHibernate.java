@@ -59,7 +59,6 @@ public class MyHibernate
 				// si hay otra fila entonces hay inconsistencia de datos...
 				if(rs.next()) throw new RuntimeException("Mas de una fila...");
 				
-				
 				return returnedObject;
 			}
 			return null;
@@ -106,6 +105,9 @@ public class MyHibernate
 				if(rs.next())
 				{
 					returnedObject = GetInstance(clazz);
+					if(clasesMejoradas.get(returnedObject.getClass()) == null)
+						ClassBuilder.mejoraClase(returnedObject.getClass(), clasesMejoradas);
+					returnedObject = (T)clasesMejoradas.get(returnedObject.getClass()).newInstance();
 					InvokeSetters(returnedObject,rs,clazz,returnedObject);
 					if (returnedObject != null) listReturned.add(returnedObject);
 				}
@@ -142,11 +144,9 @@ public class MyHibernate
 		// Armado de la query SQL
 		String sqlQuery="";
 		String alias = "a0";
-		String select = GetClassFields(clazz,alias) + SQLQueryJoinFields(clazz);
-		String joins = SQLQueryJoins(clazz);
+		String select = GetClassFields(clazz,alias);
 		sqlQuery += "SELECT " + select + "\n";
 		sqlQuery += "FROM " + GetTableName(clazz) + " " + alias + "\n";
-		sqlQuery += joins;
 	
 		return sqlQuery;
 	}
@@ -162,89 +162,6 @@ public class MyHibernate
 		sqlQuery += "WHERE " + alias + "." + IDColumnName(clazz) + " = " + id + "\n";
 	
 		return sqlQuery;
-	}
-	
-	
-	private static <T> String SQLQueryJoinFields(Class<T> dto)
-	{
-		int counter2 = 0;
-		int counter = 1;
-		Field[] fields = dto.getDeclaredFields();
-		String tableName = dto.getAnnotation(Table.class).name();
-		String columnNameId = "";
-		String joinFields = "";
-		String fieldName = "";
-		
-		for (Field field : fields) 
-		{
-            if (field.isAnnotationPresent(JoinColumn.class)) 
-            {
-            	/*if (counter2 != counter)
-            	{
-            		joinFields = joinFields + ", ";
-            		counter2++;
-            	}*/
-                String columnIdFK = field.getAnnotation(JoinColumn.class).name();
-            	//Class<?> fieldType = field.getType();
-                //String tableFieldName = fieldType.getAnnotation(Table.class).name();
-                
-                //Field[] fieldsJoin = fieldType.getDeclaredFields();
-//                for (int i=0; i<fieldsJoin.length; i++)
-//                {
-//                	if(fieldsJoin[i].isAnnotationPresent(Column.class))
-//        			{
-//        				if(fieldsJoin[i].getDeclaredAnnotation(Column.class).name()!="")
-//        					fieldName=fieldsJoin[i].getDeclaredAnnotation(Column.class).name();
-//        				else
-//        					fieldName=fieldsJoin[i].getName();
-//        			}
-//        			else if(fieldsJoin[i].isAnnotationPresent(JoinColumn.class))
-//        			{
-//        				if(fieldsJoin[i].getDeclaredAnnotation(JoinColumn.class).name()!="")
-//        					fieldName=fieldsJoin[i].getDeclaredAnnotation(JoinColumn.class).name();
-//        				else
-//        					fieldName=fieldsJoin[i].getName();
-//        			}
-//        			joinFields += "a" + counter + "." + fieldName + " as " + "a" + counter + fieldName + ((i<fieldsJoin.length-1)?", ":"");
-//                }
-         
-//                counter++;
-            }
-		} 
-		
-		return joinFields;
-	}
-	
-	private static <T> String SQLQueryJoins(Class<T> dto)
-	{
-		int counter = 1;
-		Field[] fields = dto.getDeclaredFields();
-		String tableName = dto.getAnnotation(Table.class).name();
-		String columnNameId = "";
-		String sqlQueryWithJoins = "";
-		
-//		for (Field field : fields) 
-//		{
-//            if (field.isAnnotationPresent(JoinColumn.class)) 
-//            {
-//                String columnIdFK = field.getAnnotation(JoinColumn.class).name();
-//            	Class<?> fieldType = field.getType();
-//                String tableFieldName = fieldType.getAnnotation(Table.class).name();
-//                
-//                Field[] fieldsJoin = fieldType.getDeclaredFields();
-//                for (Field f : fieldsJoin)
-//                {
-//                	if (f.isAnnotationPresent(Id.class))
-//                		columnNameId = f.getAnnotation(Column.class).name();
-//                }
-//
-//                joinHm.put(tableFieldName,"a" + counter);
-//                sqlQueryWithJoins += "LEFT JOIN " + tableFieldName + " a" + counter + " ON " + "a0." + columnIdFK + " = " + "a" + counter + "." + columnNameId + "\n";
-//                counter++;
-//            }
-//		} 
-		
-		return sqlQueryWithJoins;
 	}
 
 	private static <T> T GetInstance(Class<?> dtoClass)
@@ -334,12 +251,8 @@ public class MyHibernate
 				{
 					if(field.getDeclaredAnnotation(JoinColumn.class) != null)
 					{ 
-//						String joinAlias = joinHm.get(columnType.getAnnotation(Table.class).name());
-//						valueColumn = rs.getObject(joinAlias + field.getAnnotation(JoinColumn.class).name());
-//						SettersEntities(dto, attName, valueColumn, rs, field, returnedObject);
 						valueColumn = rs.getObject("a0"+ field.getAnnotation(JoinColumn.class).name());
 						SettersPrimitiveTypes(dto,attName+"IdByteBuddy",valueColumn,int.class);
-						
 					}
 				}
 			}
@@ -389,74 +302,6 @@ public class MyHibernate
 	    	ex.printStackTrace();
 	    	throw new RuntimeException(ex);
 	    }
-	}
-	
-	private static <T> void SettersEntities(Object dto, String attName, Object value, ResultSet rs, Field field, T returnedObject)
-	{
-		Object objectEntity = null;
-		String mtdName = getSetterName(attName);
-	    Class[] argsType = new Class[1];
-		Method mtd = null ;
-		
-        try 
-        {
-        	T entityResult = EntityInstance(value, field, returnedObject);
-        	
-        	// instanciar un objeto nuevo y llenar todos los campos
-        	mtdName = getSetterName(attName);
-        	argsType[0] =_wrapperToType(field.getType().newInstance().getClass());
-        	mtd = dto.getClass().getMethod(mtdName,argsType);
-        	
-        	mtd.invoke(dto,entityResult);
-        } 
-        catch (Exception e) 
-        {
-            e.printStackTrace();
-        }
-	}
-	
-	private static <T> T EntityInstance(Object value, Field field, T returnedObject)
-	{
-		ResultSet rs;
-		
-		try
-    	{
-			if (value != null) 
-			{
-				Class<?> entityClass = field.getType().newInstance().getClass();
-	        	String sqlQuery = SQLQueryWithId(entityClass, (Integer)value);
-		
-				System.out.println(sqlQuery);
-		
-				// Ejecucion de la query
-				rs = db.ExecuteQuery(sqlQuery);
-					
-				if(rs==null)
-				{
-					System.out.println("Resultado NULO");
-				}
-				if(rs.next())
-				{
-					// obtengo una instancia del DTO y le seteo los datos tomados del ResultSet
-					returnedObject = GetInstance(entityClass);
-					
-					InvokeSetters(returnedObject, rs, entityClass, returnedObject);
-					// si hay otra fila entonces hay inconsistencia de datos...
-					if(rs.next())
-					{
-						throw new RuntimeException("Mas de una fila...");
-					}
-					
-					return returnedObject;
-				}				
-			}    		
-    	}
-    	catch (Exception ex) 
-    	{
-    		ex.printStackTrace();
-    	}
-		
-		return null;
 	}
 
 	private static Class _wrapperToType(Class clazz)

@@ -26,65 +26,17 @@ public class Demo
 {
    public static void main(String[] args)
    {
-//	   Cliente cliente = MyHibernate.find(Cliente.class,1);
-//	   
-//	   System.out.println(cliente.getTipoClienteIdByteBuddy());
-//	   
-//	   Class<?> claseBase = Cliente.class;
-//	   DynamicType.Builder<?> builder = new ByteBuddy().subclass(claseBase);
-//
-//       Map<Class<?>, Class<?>> clasesMejoradas = new HashMap<>();
-//
-//       try {
-//
-//           Class<?> claseMejorada = clasesMejoradas.get(claseBase);
-//
-//           if (claseMejorada == null) {
-//               for (Field field : claseBase.getDeclaredFields()) {
-//                   if (field.isAnnotationPresent(ManyToOne.class)) {
-//                       String name = field.getName();
-//                       String camelCaseName = name.substring(0, 1).toUpperCase() + name.substring(1);
-//
-//                       String getterName = "get" + camelCaseName;
-//
-//                       builder = builder.method(ElementMatchers.named(getterName))
-//                               .intercept(
-//                                       MethodCall.invoke(MyInterceptor.class.getMethod("intercept", Field.class, Object.class))
-//                                               .with(field).withThis()
-//                                               .andThen(SuperMethodCall.INSTANCE)
-//                               );
-//                   }
-//               }
-//
-//               claseMejorada = builder.make().load(Demo.class.getClassLoader()).getLoaded();
-//
-//               clasesMejoradas.put(claseBase, claseMejorada);
-//           }
-//
-//
-//           cliente = (Cliente) claseMejorada.getConstructors()[0].newInstance();
-//           
-//           cliente.setTipoClienteIdByteBuddy(1);
-//           
-//           System.out.println(cliente.getTipoCliente().getDescripcion());
-//       } catch (Exception e) {
-//           e.printStackTrace();
-//       }
-
-	   Cliente cliente = MyHibernate.find(Cliente.class,1);
-	   System.out.println(cliente.getTipoCliente().getDescripcion());
-	   
 //      // primer caso: busqueda por id
 //      Producto p = MyHibernate.find(Producto.class,1);
 //      System.out.println(p.getDescripcion()+", "+p.getProveedor().getEmpresa());
-//
+
 //      // segundo caso: recuperar todas las filas
 //      List<Producto> lst = MyHibernate.findAll(Producto.class);
 //      for(Producto px:lst)
 //      {
 //         System.out.println(px.getDescripcion()+", "+px.getProveedor().getEmpresa());         
 //      }
-//      
+      
 //      // tercer caso: HQL
 //      String hql="";
 //      hql+="FROM Producto p ";
@@ -97,7 +49,14 @@ public class Demo
 //         System.out.println(px.getDescripcion()+", "+px.getProveedor().getEmpresa());         
 //      }
 	   
-
+	   // Prueba ByteBuddy Cliente
+//	   Cliente cliente = MyHibernate.find(Cliente.class,1);
+//	   System.out.println(cliente.getTipoCliente().getDescripcion());
+	   
+	   // Pruebas Entidades find - 1era Entrega
+	   PruebaFindEntidades();
+	   // Pruebas Entidades findAll - 2da Entrega
+//	   PruebaFindAllEntidades();
    }
    
    private static void PruebaFindAllEntidades()
@@ -126,7 +85,7 @@ public class Demo
 //          System.out.println(dox.getProducto() + ", " + dox.getProducto().getDescripcion());
 //       }
        
-	   // Empleado
+	   // Empleado - Error jefeIdByteBuddy 
 //	   List<Empleado> lstEmp = MyHibernate.findAll(Empleado.class);
 //	   for(Empleado ex:lstEmp)
 //       {
@@ -204,11 +163,11 @@ public class Demo
 //	   System.out.println(categoria.getDescripcion());
 	   
 	   // Cliente
-	   Cliente cliente = new Cliente();
-	   cliente = MyHibernate.find(Cliente.class,1);
-	   System.out.println(cliente.getIdCliente());
-	   System.out.println(cliente.getNombre());
-	   System.out.println(cliente.getDireccion());	   
+//	   Cliente cliente = new Cliente();
+//	   cliente = MyHibernate.find(Cliente.class,1);
+//	   System.out.println(cliente.getIdCliente());
+//	   System.out.println(cliente.getNombre());
+//	   System.out.println(cliente.getDireccion());	   
 //	   System.out.println(cliente.getTipoCliente());
 //	   System.out.println(cliente.getTipoCliente().getDescripcion());
 

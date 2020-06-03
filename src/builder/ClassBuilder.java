@@ -18,8 +18,6 @@ public class ClassBuilder
 	public static void mejoraClase(Class<?> claseBase, Map<Class<?>, Class<?>> clasesMejoradas){
 	        DynamicType.Builder<?> builder = new ByteBuddy().subclass(claseBase);
 
-//	        Map<Class<?>, Class<?>> clasesMejoradas = new HashMap<>();
-
 	        try {
 
 	            Class<?> claseMejorada = clasesMejoradas.get(claseBase);
