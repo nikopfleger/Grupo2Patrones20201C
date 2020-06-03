@@ -11,12 +11,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import Entities.Producto;
 import ann.Column;
 import ann.Id;
 import ann.JoinColumn;
 import ann.Table;
+import builder.ClassBuilder;
 import database.DBManager;
 import sun.security.jca.GetInstance;
 
@@ -24,6 +26,7 @@ public class MyHibernate
 {
 	private static DBManager db;
 	private static HashMap<String,String> joinHm;
+	private static Map<Class<?>, Class<?>> clasesMejoradas = new HashMap<>();
 	
 
 	public static <T> T find(Class<T> clazz, int id)
@@ -46,11 +49,16 @@ public class MyHibernate
 			if(rs.next())
 			{
 				// obtengo una instancia del DTO y le seteo los datos tomados del ResultSet
-				returnedObject = GetInstance(clazz);				
+				returnedObject = GetInstance(clazz);
+				if(clasesMejoradas.get(returnedObject.getClass()) == null){
+					ClassBuilder.mejoraClase(returnedObject.getClass(), clasesMejoradas);
+				}
+				returnedObject = (T)clasesMejoradas.get(returnedObject.getClass()).newInstance();
 				InvokeSetters(returnedObject,rs,clazz,returnedObject);
 				
 				// si hay otra fila entonces hay inconsistencia de datos...
 				if(rs.next()) throw new RuntimeException("Mas de una fila...");
+				
 				
 				return returnedObject;
 			}
@@ -171,36 +179,36 @@ public class MyHibernate
 		{
             if (field.isAnnotationPresent(JoinColumn.class)) 
             {
-            	if (counter2 != counter)
+            	/*if (counter2 != counter)
             	{
             		joinFields = joinFields + ", ";
             		counter2++;
-            	}
+            	}*/
                 String columnIdFK = field.getAnnotation(JoinColumn.class).name();
-            	Class<?> fieldType = field.getType();
-                String tableFieldName = fieldType.getAnnotation(Table.class).name();
+            	//Class<?> fieldType = field.getType();
+                //String tableFieldName = fieldType.getAnnotation(Table.class).name();
                 
-                Field[] fieldsJoin = fieldType.getDeclaredFields();
-                for (int i=0; i<fieldsJoin.length; i++)
-                {
-                	if(fieldsJoin[i].isAnnotationPresent(Column.class))
-        			{
-        				if(fieldsJoin[i].getDeclaredAnnotation(Column.class).name()!="")
-        					fieldName=fieldsJoin[i].getDeclaredAnnotation(Column.class).name();
-        				else
-        					fieldName=fieldsJoin[i].getName();
-        			}
-        			else if(fieldsJoin[i].isAnnotationPresent(JoinColumn.class))
-        			{
-        				if(fieldsJoin[i].getDeclaredAnnotation(JoinColumn.class).name()!="")
-        					fieldName=fieldsJoin[i].getDeclaredAnnotation(JoinColumn.class).name();
-        				else
-        					fieldName=fieldsJoin[i].getName();
-        			}
-        			joinFields += "a" + counter + "." + fieldName + " as " + "a" + counter + fieldName + ((i<fieldsJoin.length-1)?", ":"");
-                }
+                //Field[] fieldsJoin = fieldType.getDeclaredFields();
+//                for (int i=0; i<fieldsJoin.length; i++)
+//                {
+//                	if(fieldsJoin[i].isAnnotationPresent(Column.class))
+//        			{
+//        				if(fieldsJoin[i].getDeclaredAnnotation(Column.class).name()!="")
+//        					fieldName=fieldsJoin[i].getDeclaredAnnotation(Column.class).name();
+//        				else
+//        					fieldName=fieldsJoin[i].getName();
+//        			}
+//        			else if(fieldsJoin[i].isAnnotationPresent(JoinColumn.class))
+//        			{
+//        				if(fieldsJoin[i].getDeclaredAnnotation(JoinColumn.class).name()!="")
+//        					fieldName=fieldsJoin[i].getDeclaredAnnotation(JoinColumn.class).name();
+//        				else
+//        					fieldName=fieldsJoin[i].getName();
+//        			}
+//        			joinFields += "a" + counter + "." + fieldName + " as " + "a" + counter + fieldName + ((i<fieldsJoin.length-1)?", ":"");
+//                }
          
-                counter++;
+//                counter++;
             }
 		} 
 		
@@ -215,26 +223,26 @@ public class MyHibernate
 		String columnNameId = "";
 		String sqlQueryWithJoins = "";
 		
-		for (Field field : fields) 
-		{
-            if (field.isAnnotationPresent(JoinColumn.class)) 
-            {
-                String columnIdFK = field.getAnnotation(JoinColumn.class).name();
-            	Class<?> fieldType = field.getType();
-                String tableFieldName = fieldType.getAnnotation(Table.class).name();
-                
-                Field[] fieldsJoin = fieldType.getDeclaredFields();
-                for (Field f : fieldsJoin)
-                {
-                	if (f.isAnnotationPresent(Id.class))
-                		columnNameId = f.getAnnotation(Column.class).name();
-                }
-
-                joinHm.put(tableFieldName,"a" + counter);
-                sqlQueryWithJoins += "LEFT JOIN " + tableFieldName + " a" + counter + " ON " + "a0." + columnIdFK + " = " + "a" + counter + "." + columnNameId + "\n";
-                counter++;
-            }
-		} 
+//		for (Field field : fields) 
+//		{
+//            if (field.isAnnotationPresent(JoinColumn.class)) 
+//            {
+//                String columnIdFK = field.getAnnotation(JoinColumn.class).name();
+//            	Class<?> fieldType = field.getType();
+//                String tableFieldName = fieldType.getAnnotation(Table.class).name();
+//                
+//                Field[] fieldsJoin = fieldType.getDeclaredFields();
+//                for (Field f : fieldsJoin)
+//                {
+//                	if (f.isAnnotationPresent(Id.class))
+//                		columnNameId = f.getAnnotation(Column.class).name();
+//                }
+//
+//                joinHm.put(tableFieldName,"a" + counter);
+//                sqlQueryWithJoins += "LEFT JOIN " + tableFieldName + " a" + counter + " ON " + "a0." + columnIdFK + " = " + "a" + counter + "." + columnNameId + "\n";
+//                counter++;
+//            }
+//		} 
 		
 		return sqlQueryWithJoins;
 	}
@@ -326,9 +334,12 @@ public class MyHibernate
 				{
 					if(field.getDeclaredAnnotation(JoinColumn.class) != null)
 					{ 
-						String joinAlias = joinHm.get(columnType.getAnnotation(Table.class).name());
-						valueColumn = rs.getObject(joinAlias + field.getAnnotation(JoinColumn.class).name());
-						SettersEntities(dto, attName, valueColumn, rs, field, returnedObject);
+//						String joinAlias = joinHm.get(columnType.getAnnotation(Table.class).name());
+//						valueColumn = rs.getObject(joinAlias + field.getAnnotation(JoinColumn.class).name());
+//						SettersEntities(dto, attName, valueColumn, rs, field, returnedObject);
+						valueColumn = rs.getObject("a0"+ field.getAnnotation(JoinColumn.class).name());
+						SettersPrimitiveTypes(dto,attName+"IdByteBuddy",valueColumn,int.class);
+						
 					}
 				}
 			}
