@@ -5,22 +5,12 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
-
 import Entities.*;
 import ann.ManyToOne;
 import ann.Table;
 import interceptor.MyInterceptor;
 import myhibernate.MyHibernate;
 import myhibernate.Query;
-import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.dynamic.DynamicType;
-import net.bytebuddy.implementation.MethodCall;
-import net.bytebuddy.implementation.SuperMethodCall;
-import net.bytebuddy.implementation.bind.annotation.SuperMethod;
-
-import net.bytebuddy.matcher.ElementMatchers;
 
 public class Demo
 {
@@ -56,7 +46,7 @@ public class Demo
 	   // Pruebas Entidades find - 1era Entrega
 	   PruebaFindEntidades();
 	   // Pruebas Entidades findAll - 2da Entrega
-//	   PruebaFindAllEntidades();
+	   PruebaFindAllEntidades();
    }
    
    private static void PruebaFindAllEntidades()
@@ -181,31 +171,31 @@ public class Demo
 //	   System.out.println(detalleOrden.getOrden().getCliente());
 	   
 //	    Empleado
-	   Empleado empleado = new Empleado();
-	   empleado = MyHibernate.find(Empleado.class,5);
-	   System.out.println(empleado.getIdEmpleado());
-	   System.out.println(empleado.getNombre());
-	   
-	   int counter = 1;
-	   while (empleado.getJefe() != null)
-	   {
-		   empleado = empleado.getJefe();
-		   System.out.println("Subempleado " + counter);
-		   System.out.println(empleado.getIdEmpleado());
-		   System.out.println(empleado.getNombre());
-		   counter++;
-	   }
+//	   Empleado empleado = new Empleado();
+//	   empleado = MyHibernate.find(Empleado.class,5);
+//	   System.out.println(empleado.getIdEmpleado());
+//	   System.out.println(empleado.getNombre());
+//	   
+//	   int counter = 1;
+//	   while (empleado.getJefe() != null)
+//	   {
+//		   empleado = empleado.getJefe();
+//		   System.out.println("Subempleado " + counter);
+//		   System.out.println(empleado.getIdEmpleado());
+//		   System.out.println(empleado.getNombre());
+//		   counter++;
+//	   }
 
-	   Orden orden = new Orden();
-	   orden = MyHibernate.find(Orden.class,1);
-	   System.out.println(orden.getIdOrden());
-	   System.out.println(orden.getFechaGenerada());
-	   System.out.println(orden.getFechaEntregada());
-	   System.out.println(orden.getCliente());
-	   System.out.println(orden.getCliente().getNombre());
-	   System.out.println(orden.getCliente().getTipoCliente().getDescripcion());
-	   System.out.println(orden.getEmpleado());
-	   System.out.println(orden.getEmpleado().getNombre());
+//	   Orden orden = new Orden();
+//	   orden = MyHibernate.find(Orden.class,1);
+//	   System.out.println(orden.getIdOrden());
+//	   System.out.println(orden.getFechaGenerada());
+//	   System.out.println(orden.getFechaEntregada());
+//	   System.out.println(orden.getCliente());
+//	   System.out.println(orden.getCliente().getNombre());
+//	   System.out.println(orden.getCliente().getTipoCliente().getDescripcion());
+//	   System.out.println(orden.getEmpleado());
+//	   System.out.println(orden.getEmpleado().getNombre());
 	   
 	   // Producto
 //	   Producto producto = new Producto();
