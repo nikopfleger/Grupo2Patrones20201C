@@ -1,5 +1,5 @@
-***Hay que agregar al classpath las dependencias de ByteBuddy y HSQLDB***\n
-***Tambien hay que agregar el package de properties de BBDD***\n
+***Hay que agregar al classpath las dependencias de ByteBuddy y HSQLDB
+Tambien hay que agregar el package de properties de BBDD***
 
 
 \<?xml version="1.0" encoding="UTF-8"?\>
