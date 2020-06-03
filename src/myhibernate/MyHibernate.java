@@ -40,7 +40,7 @@ public class MyHibernate
 		{
 			// Armado de la query SQL
 			String sqlQuery = SQLQueryWithId(clazz, id);
-			System.out.println(sqlQuery);
+//			System.out.println(sqlQuery);
 
 			// Ejecucion de la query
 			rs = db.ExecuteQuery(sqlQuery);
@@ -426,7 +426,7 @@ public class MyHibernate
 				Class<?> entityClass = field.getType().newInstance().getClass();
 	        	String sqlQuery = SQLQueryWithId(entityClass, (Integer)value);
 		
-//				System.out.println(sqlQuery);
+				System.out.println(sqlQuery);
 		
 				// Ejecucion de la query
 				rs = db.ExecuteQuery(sqlQuery);

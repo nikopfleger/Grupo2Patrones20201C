@@ -11,7 +11,7 @@ import Entities.Categoria;
 
 @Entity
 @Table(name="producto")
-public class Producto
+public class Producto implements IByteBuddy
 {
    @Id
    @Column(name="id_producto")

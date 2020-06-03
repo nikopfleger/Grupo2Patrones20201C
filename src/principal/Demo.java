@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+
 import Entities.*;
 import ann.ManyToOne;
 import ann.Table;
@@ -16,6 +18,8 @@ import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.MethodCall;
 import net.bytebuddy.implementation.SuperMethodCall;
+import net.bytebuddy.implementation.bind.annotation.SuperMethod;
+
 import net.bytebuddy.matcher.ElementMatchers;
 
 public class Demo
@@ -93,9 +97,7 @@ public class Demo
 //         System.out.println(px.getDescripcion()+", "+px.getProveedor().getEmpresa());         
 //      }
 	   
-//	   PruebaFindEntidades();
-//	   
-//	   PruebaFindAllEntidades();
+
    }
    
    private static void PruebaFindAllEntidades()
@@ -209,7 +211,6 @@ public class Demo
 	   System.out.println(cliente.getDireccion());	   
 //	   System.out.println(cliente.getTipoCliente());
 //	   System.out.println(cliente.getTipoCliente().getDescripcion());
-	   System.out.println(cliente.getTipoClienteIdByteBuddy());
 
 	   // DetalleOrden - ERROR
 //	   DetalleOrden detalleOrden = new DetalleOrden();
@@ -235,8 +236,7 @@ public class Demo
 //		   System.out.println(empleado.getNombre());
 //		   counter++;
 //	   }
-//	   
-//	   // Orden
+
 //	   Orden orden = new Orden();
 //	   orden = MyHibernate.find(Orden.class,1);
 //	   System.out.println(orden.getIdOrden());

@@ -11,7 +11,7 @@ import Entities.PromocionVigencia;
 
 @Entity
 @Table(name="promocion_producto")
-public class PromocionProducto
+public class PromocionProducto implements IByteBuddy
 {
 	
 	@Id
