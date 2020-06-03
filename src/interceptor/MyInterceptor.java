@@ -17,10 +17,10 @@ public class MyInterceptor
 
             if (campo == null) {
             	Class clasePadre = self.getClass();
-            	String methodName = armaGetter(type.getSimpleName());
+            	String methodName = armaGetter(field.getName());
+            	System.out.println(methodName);
             	Method mtd = clasePadre.getMethod(methodName);
             	int id = (int) mtd.invoke(self);
-//            	System.out.println(id);
                 field.set(self, MyHibernate.find(type,id));
             }
         } catch (Exception e) {

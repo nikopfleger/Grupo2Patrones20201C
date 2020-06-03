@@ -180,32 +180,32 @@ public class Demo
 //	   System.out.println(detalleOrden.getProducto().getDescripcion());
 //	   System.out.println(detalleOrden.getOrden().getCliente());
 	   
-	   // Empleado
-//	   Empleado empleado = new Empleado();
-//	   empleado = MyHibernate.find(Empleado.class,5);
-//	   System.out.println(empleado.getIdEmpleado());
-//	   System.out.println(empleado.getNombre());
-//	   
-//	   int counter = 1;
-//	   while (empleado.getJefe() != null)
-//	   {
-//		   empleado = empleado.getJefe();
-//		   System.out.println("Subempleado " + counter);
-//		   System.out.println(empleado.getIdEmpleado());
-//		   System.out.println(empleado.getNombre());
-//		   counter++;
-//	   }
+//	    Empleado
+	   Empleado empleado = new Empleado();
+	   empleado = MyHibernate.find(Empleado.class,5);
+	   System.out.println(empleado.getIdEmpleado());
+	   System.out.println(empleado.getNombre());
+	   
+	   int counter = 1;
+	   while (empleado.getJefe() != null)
+	   {
+		   empleado = empleado.getJefe();
+		   System.out.println("Subempleado " + counter);
+		   System.out.println(empleado.getIdEmpleado());
+		   System.out.println(empleado.getNombre());
+		   counter++;
+	   }
 
-//	   Orden orden = new Orden();
-//	   orden = MyHibernate.find(Orden.class,1);
-//	   System.out.println(orden.getIdOrden());
-//	   System.out.println(orden.getFechaGenerada());
-//	   System.out.println(orden.getFechaEntregada());
-//	   System.out.println(orden.getCliente());
-//	   System.out.println(orden.getCliente().getNombre());
-//	   System.out.println(orden.getCliente().getTipoCliente().getDescripcion());
-//	   System.out.println(orden.getEmpleado());
-//	   System.out.println(orden.getEmpleado().getNombre());
+	   Orden orden = new Orden();
+	   orden = MyHibernate.find(Orden.class,1);
+	   System.out.println(orden.getIdOrden());
+	   System.out.println(orden.getFechaGenerada());
+	   System.out.println(orden.getFechaEntregada());
+	   System.out.println(orden.getCliente());
+	   System.out.println(orden.getCliente().getNombre());
+	   System.out.println(orden.getCliente().getTipoCliente().getDescripcion());
+	   System.out.println(orden.getEmpleado());
+	   System.out.println(orden.getEmpleado().getNombre());
 	   
 	   // Producto
 //	   Producto producto = new Producto();

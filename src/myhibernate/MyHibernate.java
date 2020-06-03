@@ -277,8 +277,10 @@ public class MyHibernate
 		   	try
 		   	{
 			   	// intento obtener el metodo...
-			   	argsType[0] = value.getClass();
-			   	mtd = dto.getClass().getMethod(mtdName,argsType);
+		   		if(value != null){
+		   			argsType[0] = value.getClass();
+			   		mtd = dto.getClass().getMethod(mtdName,argsType);
+		   		}
 		   	}
 		   	catch(NoSuchMethodException ex)
 		   	{
@@ -294,8 +296,9 @@ public class MyHibernate
 				   		value = true;	
 			   	}		   		
 		   	}
-		   
-		   	mtd.invoke(dto,value);
+		   if(mtd != null){
+			   mtd.invoke(dto,value);
+		   }
 	    }
 	    catch(Exception ex)
 		{
