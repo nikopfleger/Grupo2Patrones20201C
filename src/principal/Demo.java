@@ -163,20 +163,20 @@ public class Demo
 //	   System.out.println(detalleOrden.getOrden().getCliente());
 	   
 	   // Empleado
-	   Empleado empleado = new Empleado();
-	   empleado = MyHibernate.find(Empleado.class,5);
-	   System.out.println(empleado.getIdEmpleado());
-	   System.out.println(empleado.getNombre());
-	   
-	   int counter = 1;
-	   while (empleado.getJefe() != null)
-	   {
-		   empleado = empleado.getJefe();
-		   System.out.println("Subempleado " + counter);
-		   System.out.println(empleado.getIdEmpleado());
-		   System.out.println(empleado.getNombre());
-		   counter++;
-	   }
+//	   Empleado empleado = new Empleado();
+//	   empleado = MyHibernate.find(Empleado.class,5);
+//	   System.out.println(empleado.getIdEmpleado());
+//	   System.out.println(empleado.getNombre());
+//	   
+//	   int counter = 1;
+//	   while (empleado.getJefe() != null)
+//	   {
+//		   empleado = empleado.getJefe();
+//		   System.out.println("Subempleado " + counter);
+//		   System.out.println(empleado.getIdEmpleado());
+//		   System.out.println(empleado.getNombre());
+//		   counter++;
+//	   }
 	   
 	   // Orden
 	   Orden orden = new Orden();

@@ -13,7 +13,7 @@ import Entities.Promocion;
 
 @Entity
 @Table(name="promocion_vigencia")
-public class PromocionVigencia
+public class PromocionVigencia implements IByteBuddy
 {
 	@Id
 	@Column(name="id_promocion_vigencia")
