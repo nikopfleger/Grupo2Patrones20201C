@@ -40,6 +40,10 @@ public class Producto implements IByteBuddy
    @Column(name="flg_discontinuo")
    boolean flgDiscontinuo;
    
+   private int proveedorIdByteBuddy;
+   
+   private int categoriaIdByteBuddy;
+   
    public Categoria getCategoria()
    {
 	   return this.categoria;
@@ -119,5 +123,25 @@ public class Producto implements IByteBuddy
    {
 	   this.flgDiscontinuo = flgDiscontinuo;
    }
+
+public int getProveedorIdByteBuddy()
+{
+	return proveedorIdByteBuddy;
+}
+
+public void setProveedorIdByteBuddy(int proveedorIdByteBuddy)
+{
+	this.proveedorIdByteBuddy = proveedorIdByteBuddy;
+}
+
+public int getCategoriaIdByteBuddy()
+{
+	return categoriaIdByteBuddy;
+}
+
+public void setCategoriaIdByteBuddy(int categoriaIdByteBuddy)
+{
+	this.categoriaIdByteBuddy = categoriaIdByteBuddy;
+}
 
 }

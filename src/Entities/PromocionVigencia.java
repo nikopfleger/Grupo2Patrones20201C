@@ -29,6 +29,8 @@ public class PromocionVigencia implements IByteBuddy
 	@Column(name="fecha_fin")
 	Date fechaFin;
 	
+	private int promocionIdByteBuddy;
+	
 	public int getIdPromocionVigencia()
 	{
 		return this.idPromocionVigencia;

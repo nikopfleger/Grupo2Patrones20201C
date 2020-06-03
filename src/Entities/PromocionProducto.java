@@ -29,6 +29,10 @@ public class PromocionProducto implements IByteBuddy
 	@Column(name="descuento")
 	private float descuento;
 	
+	private int promocionVigenciaIdByteBuddy;
+	
+	private int productoIdByteBuddy;
+	
 	public int getIdPromocionProducto()
 	{
 		return this.idPromocionProducto;
@@ -67,6 +71,26 @@ public class PromocionProducto implements IByteBuddy
 	public void setDescuento(float descuento)
 	{
 		this.descuento = descuento;
+	}
+
+	public int getPromocionVigenciaIdByteBuddy()
+	{
+		return promocionVigenciaIdByteBuddy;
+	}
+
+	public void setPromocionVigenciaIdByteBuddy(int promocionVigenciaIdByteBuddy)
+	{
+		this.promocionVigenciaIdByteBuddy = promocionVigenciaIdByteBuddy;
+	}
+
+	public int getProductoIdByteBuddy()
+	{
+		return productoIdByteBuddy;
+	}
+
+	public void setProductoIdByteBuddy(int productoIdByteBuddy)
+	{
+		this.productoIdByteBuddy = productoIdByteBuddy;
 	}
 	
 

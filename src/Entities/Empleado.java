@@ -22,6 +22,8 @@ public class Empleado implements IByteBuddy
 	@JoinColumn(name="id_jefe")
 	private Empleado jefe;
 	
+	private int jefeIdByteBuddy;
+	
 	public int getIdEmpleado()
 	{
 		return idEmpleado;
@@ -50,5 +52,15 @@ public class Empleado implements IByteBuddy
 	public void setJefe(Empleado jefe)
 	{
 		this.jefe=jefe;
+	}
+
+	public int getJefeIdByteBuddy()
+	{
+		return jefeIdByteBuddy;
+	}
+
+	public void setJefeIdByteBuddy(int jefeIdByteBuddy)
+	{
+		this.jefeIdByteBuddy = jefeIdByteBuddy;
 	}
 }

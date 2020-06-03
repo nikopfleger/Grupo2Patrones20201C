@@ -26,6 +26,10 @@ public class DetalleOrden implements IByteBuddy
 	@JoinColumn(name="id_producto")
 	private Producto producto;
 	
+	private int ordenIdByteBuddy;
+	
+	private int productoIdByteBuddy;
+	
 	public int getIdDetalleOrden()
 	{
 		return idDetalleOrden;
@@ -64,5 +68,25 @@ public class DetalleOrden implements IByteBuddy
 	public void setProducto(Producto producto)
 	{
 		this.producto=producto;
+	}
+
+	public int getOrdenIdByteBuddy()
+	{
+		return ordenIdByteBuddy;
+	}
+
+	public void setOrdenIdByteBuddy(int ordenIdByteBuddy)
+	{
+		this.ordenIdByteBuddy = ordenIdByteBuddy;
+	}
+
+	public int getProductoIdByteBuddy()
+	{
+		return productoIdByteBuddy;
+	}
+
+	public void setProductoIdByteBuddy(int productoIdByteBuddy)
+	{
+		this.productoIdByteBuddy = productoIdByteBuddy;
 	}
 }

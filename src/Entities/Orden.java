@@ -32,6 +32,10 @@ public class Orden implements IByteBuddy
 	@JoinColumn(name="id_empleado")
 	private Empleado empleado;
 	
+	private int clienteIdByteBuddy;
+	
+	private int empleadoIdByteBuddy;
+	
 	public int getIdOrden()
 	{
 		return idOrden;
@@ -80,5 +84,25 @@ public class Orden implements IByteBuddy
 	public void setEmpleado(Empleado empleado)
 	{
 		this.empleado=empleado;
+	}
+
+	public int getClienteIdByteBuddy()
+	{
+		return clienteIdByteBuddy;
+	}
+
+	public void setClienteIdByteBuddy(int clienteIdByteBuddy)
+	{
+		this.clienteIdByteBuddy=clienteIdByteBuddy;
+	}
+
+	public int getEmpleadoIdByteBuddy()
+	{
+		return empleadoIdByteBuddy;
+	}
+
+	public void setEmpleadoIdByteBuddy(int empleadoIdByteBuddy)
+	{
+		this.empleadoIdByteBuddy=empleadoIdByteBuddy;
 	}
 }
