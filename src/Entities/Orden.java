@@ -12,7 +12,7 @@ import Entities.Empleado;
 
 @Entity
 @Table(name="orden")
-public class Orden
+public class Orden implements IByteBuddy
 {
 	@Id
 	@Column(name="id_orden")

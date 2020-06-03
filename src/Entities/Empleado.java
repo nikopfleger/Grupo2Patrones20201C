@@ -9,7 +9,7 @@ import ann.Table;
 
 @Entity
 @Table(name="empleado")
-public class Empleado
+public class Empleado implements IByteBuddy
 {
 	@Id
 	@Column(name="id_empleado")

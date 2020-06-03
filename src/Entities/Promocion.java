@@ -7,7 +7,7 @@ import ann.Table;
 
 @Entity
 @Table(name="promocion")
-public class Promocion
+public class Promocion implements IByteBuddy
 {
 
 	@Id
