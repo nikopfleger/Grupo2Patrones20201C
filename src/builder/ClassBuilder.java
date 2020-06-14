@@ -1,15 +1,19 @@
 package builder;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
 import ann.ManyToOne;
 import interceptor.MyInterceptor;
 import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.DynamicType;
+import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.implementation.MethodCall;
 import net.bytebuddy.implementation.SuperMethodCall;
+import net.bytebuddy.implementation.bytecode.member.MethodReturn;
 import net.bytebuddy.matcher.ElementMatchers;
 import principal.Demo;
 
@@ -36,6 +40,8 @@ public class ClassBuilder
 	                                                .with(field).withThis()
 	                                                .andThen(SuperMethodCall.INSTANCE)
 	                                );
+	                        String nameIdByteBuddy = name + "IdByteBuddy";
+	                        builder = builder.defineProperty(nameIdByteBuddy, int.class);	                        
 	                    }
 	                }
 
