@@ -25,8 +25,6 @@ public class Cliente
    @ManyToOne
    @JoinColumn(name="id_tipo_cliente")
    private TipoCliente tipoCliente;
-   
-   private int tipoClienteIdByteBuddy;
 
    public int getIdCliente()
    {
@@ -67,15 +65,4 @@ public class Cliente
    {
 	   this.tipoCliente=tipoCliente;
    }
-
-   public int getTipoClienteIdByteBuddy()
-   {
-	   	return tipoClienteIdByteBuddy;
-   }
-
-   public void setTipoClienteIdByteBuddy(int tipoClienteIdByteBuddy)
-   {
-	   this.tipoClienteIdByteBuddy = tipoClienteIdByteBuddy;
-   }
-
 }

@@ -22,10 +22,6 @@ public class ProveedorCategoria implements IByteBuddy
 	@ManyToOne
 	@JoinColumn(name="id_categoria")
 	private Categoria categoria;
-	
-	private int proveedorIdByteBuddy;
-	
-	private int categoriaIdByteBuddy;
 
 	public int getIdProveedorCategoria()
 	{
@@ -56,25 +52,4 @@ public class ProveedorCategoria implements IByteBuddy
 	{
 		this.categoria = categoria;
 	}
-
-	public int getProveedorIdByteBuddy()
-	{
-		return proveedorIdByteBuddy;
-	}
-
-	public void setProveedorIdByteBuddy(int proveedorIdByteBuddy)
-	{
-		this.proveedorIdByteBuddy = proveedorIdByteBuddy;
-	}
-
-	public int getCategoriaIdByteBuddy()
-	{
-		return categoriaIdByteBuddy;
-	}
-
-	public void setCategoriaIdByteBuddy(int categoriaIdByteBuddy)
-	{
-		this.categoriaIdByteBuddy = categoriaIdByteBuddy;
-	}
-	
 }

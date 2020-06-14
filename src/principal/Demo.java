@@ -5,22 +5,12 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
-
 import Entities.*;
 import ann.ManyToOne;
 import ann.Table;
 import interceptor.MyInterceptor;
 import myhibernate.MyHibernate;
 import myhibernate.Query;
-import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.dynamic.DynamicType;
-import net.bytebuddy.implementation.MethodCall;
-import net.bytebuddy.implementation.SuperMethodCall;
-import net.bytebuddy.implementation.bind.annotation.SuperMethod;
-
-import net.bytebuddy.matcher.ElementMatchers;
 
 public class Demo
 {
@@ -56,7 +46,7 @@ public class Demo
 	   // Pruebas Entidades find - 1era Entrega
 	   PruebaFindEntidades();
 	   // Pruebas Entidades findAll - 2da Entrega
-//	   PruebaFindAllEntidades();
+	   PruebaFindAllEntidades();
    }
    
    private static void PruebaFindAllEntidades()
@@ -180,7 +170,7 @@ public class Demo
 //	   System.out.println(detalleOrden.getProducto().getDescripcion());
 //	   System.out.println(detalleOrden.getOrden().getCliente());
 	   
-//	    Empleado
+//	   Empleado
 	   Empleado empleado = new Empleado();
 	   empleado = MyHibernate.find(Empleado.class,5);
 	   System.out.println(empleado.getIdEmpleado());
@@ -199,6 +189,7 @@ public class Demo
 	   Empleado e2 = new Empleado();
 	   e2 = MyHibernate.find(Empleado.class,2);
 	   System.out.println(e2.getNombre());
+
 
 //	   Orden orden = new Orden();
 //	   orden = MyHibernate.find(Orden.class,1);
