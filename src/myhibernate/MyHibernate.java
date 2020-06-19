@@ -9,18 +9,25 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
+
+import org.reflections.Reflections;
+
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
 import Entities.Producto;
 import ann.Column;
+import ann.Entity;
 import ann.Id;
 import ann.JoinColumn;
 import ann.Table;
 import builder.ClassBuilder;
 import database.DBManager;
-import sun.security.jca.GetInstance;
 
 public class MyHibernate
 {
@@ -135,7 +142,32 @@ public class MyHibernate
 
 	public static Query createQuery(String hql)
 	{
-		// PROGRAMAR AQUI
+		Reflections reflections = new Reflections("Entities"); 
+		Set<Class<?>> entities = 
+		    reflections.getTypesAnnotatedWith(ann.Entity.class);
+		
+//		entities.stream().forEach(s-> System.out.println(s.getSimpleName()));
+		
+		Map<String, Class<?>> aliases = new HashMap<>();
+		
+		String query = "";
+		
+		List<String> hqlDecomp = Arrays.asList(hql.split(" "));
+		
+		List<String> sqlKeyWords = Arrays.asList("from","where","join");
+		
+		List<Integer> indexKeyWords = new ArrayList<Integer>();
+		
+//		for (int i = 0; i < hqlDecomp.size(); i++) {
+//	        if (sqlKeyWords.contains(hqlDecomp.get(i).toLowerCase())) {
+//	            indexKeyWords.add(i);
+//	        }
+//	    }
+		
+		String queryFrom = buildQueryFrom(hqlDecomp, entities, aliases);
+		
+		System.out.println(queryFrom);
+	
 		return null;
 	}
 	
@@ -326,4 +358,17 @@ public class MyHibernate
 		return "set" + attNameUpperLetter;		
 	}
 
+	private static String buildQueryFrom(List<String> hqlDecomp, Set<Class<?>> entities, Map<String, Class<?>> aliases) {
+		String queryFrom = "";
+		int indexFrom = hqlDecomp.indexOf("FROM");
+		
+		Class<?> clazz = entities.stream().filter(c -> c.getSimpleName().equals(hqlDecomp.get(indexFrom+1))).findFirst().orElse(null);		
+		queryFrom = "FROM "+clazz.getAnnotation(Table.class).name()+" ";
+		String alias = hqlDecomp.get(indexFrom+2);
+		queryFrom += alias;
+		aliases.put(alias, clazz);
+		
+		return queryFrom;
+	}
+	
 }

@@ -44,9 +44,10 @@ public class Demo
 //	   System.out.println(cliente.getTipoCliente().getDescripcion());
 	   
 	   // Pruebas Entidades find - 1era Entrega
-	   PruebaFindEntidades();
+	   //PruebaFindEntidades();
 	   // Pruebas Entidades findAll - 2da Entrega
-	   PruebaFindAllEntidades();
+	   //PruebaFindAllEntidades();
+	   MyHibernate.createQuery("FROM Empleado e");
    }
    
    private static void PruebaFindAllEntidades()
