@@ -14,17 +14,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import org.reflections.Reflections;
-
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
 import Entities.Producto;
 import ann.Column;
 import ann.Entity;
 import ann.Id;
 import ann.JoinColumn;
+import ann.ManyToOne;
 import ann.Table;
 import builder.ClassBuilder;
 import database.DBManager;
@@ -169,6 +167,15 @@ public class MyHibernate
 		System.out.println(queryFrom);
 	
 		return null;
+	}
+	
+	public static <T> Set<Class<?>> test(Class<T> clazz)
+	{
+		Reflections reflections = new Reflections("Entities");
+		Set<Class<? extends T>> subtypes = reflections.getSubTypesOf(clazz);
+		Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(ManyToOne.class);
+		
+		return annotated;
 	}
 	
 	private static <T> String SQLQuery(Class<T> clazz) 

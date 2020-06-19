@@ -5,6 +5,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import Entities.*;
 import ann.ManyToOne;
 import ann.Table;
@@ -42,6 +44,8 @@ public class Demo
 	   // Prueba ByteBuddy Cliente
 //	   Cliente cliente = MyHibernate.find(Cliente.class,1);
 //	   System.out.println(cliente.getTipoCliente().getDescripcion());
+
+	   Set<Class<?>> prueba = MyHibernate.test(Empleado.class);
 	   
 	   // Pruebas Entidades find - 1era Entrega
 	   //PruebaFindEntidades();
