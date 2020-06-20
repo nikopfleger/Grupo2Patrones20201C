@@ -12,13 +12,13 @@ public class Query
 	
    public void setParameter(String pName,Object pValue)
    {
-	  if ((pValue instanceof String) || (pValue instanceof Number) || (pValue.getClass().equals(char.class)))
+	   System.out.println(pValue instanceof String);
+	   System.out.println(pValue instanceof Number);
+	   System.out.println(pValue.getClass());
+       System.out.println(java.lang.Character.class);
+
+	   if ((pValue instanceof String) || (pValue instanceof Number) || (pValue.getClass().equals(java.lang.Character.class)))
 		  hql = hql.replace(":" + pName, pValue.toString());
-	  else
-	  {
-		//PREGUNTAR SI PUEDE RECIBIR UN OBJETO
-	  }
-      // PROGRAMAR AQUI   
 	   
    }
 
