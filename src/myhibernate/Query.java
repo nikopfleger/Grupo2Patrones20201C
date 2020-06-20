@@ -1,6 +1,5 @@
 package myhibernate;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Query
@@ -13,11 +12,11 @@ public class Query
 	
    public void setParameter(String pName,Object pValue)
    {
-	  if ((pValue instanceof String) || (pValue instanceof Number))
+	  if ((pValue instanceof String) || (pValue instanceof Number) || (pValue.getClass().equals(char.class)))
 		  hql = hql.replace(":" + pName, pValue.toString());
 	  else
 	  {
-		
+		//PREGUNTAR SI PUEDE RECIBIR UN OBJETO
 	  }
       // PROGRAMAR AQUI   
 	   

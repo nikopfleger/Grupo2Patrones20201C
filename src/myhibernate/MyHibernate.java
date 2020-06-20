@@ -166,7 +166,7 @@ public class MyHibernate
 		
 		System.out.println(queryFrom);
 	
-		return null;
+		return new Query(queryFrom);
 	}
 	
 	public static <T> Set<Class<?>> test(Class<T> clazz)
