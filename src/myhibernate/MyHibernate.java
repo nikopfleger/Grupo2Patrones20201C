@@ -143,9 +143,6 @@ public class MyHibernate
 		Reflections reflections = new Reflections("Entities"); 
 		Set<Class<?>> entities = 
 		    reflections.getTypesAnnotatedWith(ann.Entity.class);
-		
-//		entities.stream().forEach(s-> System.out.println(s.getSimpleName()));
-		
 		Map<String, Class<?>> aliases = new HashMap<>();
 		
 		String query = "";
@@ -163,19 +160,12 @@ public class MyHibernate
 //	    }
 		
 		String queryFrom = buildQueryFrom(hqlDecomp, entities, aliases);
+		String queryJoin = buildQueryJoin(hqlDecomp, entities, aliases);
+		String queryWhere = buildQueryWhere(hqlDecomp, entities, aliases);
 		
 		System.out.println(queryFrom);
 	
-		return new Query(queryFrom);
-	}
-	
-	public static <T> Set<Class<?>> test(Class<T> clazz)
-	{
-		Reflections reflections = new Reflections("Entities");
-		Set<Class<? extends T>> subtypes = reflections.getSubTypesOf(clazz);
-		Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(ManyToOne.class);
-		
-		return annotated;
+		return new Query(queryFrom + queryJoin + queryWhere);
 	}
 	
 	private static <T> String SQLQuery(Class<T> clazz) 
@@ -368,14 +358,44 @@ public class MyHibernate
 	private static String buildQueryFrom(List<String> hqlDecomp, Set<Class<?>> entities, Map<String, Class<?>> aliases) {
 		String queryFrom = "";
 		int indexFrom = hqlDecomp.indexOf("FROM");
+		String alias = hqlDecomp.get(indexFrom + 2);
 		
-		Class<?> clazz = entities.stream().filter(c -> c.getSimpleName().equals(hqlDecomp.get(indexFrom+1))).findFirst().orElse(null);		
-		queryFrom = "FROM "+clazz.getAnnotation(Table.class).name()+" ";
-		String alias = hqlDecomp.get(indexFrom+2);
+		Class<?> clazz = EntityClassFromString(hqlDecomp, entities);
+		queryFrom = "FROM " + GetTableName(clazz) + " ";
 		queryFrom += alias;
 		aliases.put(alias, clazz);
 		
 		return queryFrom;
 	}
 	
+	private static String buildQueryJoin(List<String> hqlDecomp, Set<Class<?>> entities, Map<String, Class<?>> aliases) {
+		String queryFrom = "";
+		
+		return queryFrom;
+	}
+	
+	private static String buildQueryWhere(List<String> hqlDecomp, Set<Class<?>> entities, Map<String, Class<?>> aliases) {
+		String queryFrom = "";
+		Class<?> clazz = EntityClassFromString(hqlDecomp, entities);
+		Field[] fields = clazz.getDeclaredFields();
+		
+		// Ver en caso de que si hay AND dividir por esta palabra y hacer un foreach por cada division del AND
+		int indexWhere = hqlDecomp.indexOf("WHERE");
+		String whereEqual = hqlDecomp.get(indexWhere + 1);
+		List<String> whereDecomp = Arrays.asList(whereEqual.split("=:"));
+		String entityProp = whereDecomp.get(0);
+		
+		queryFrom = "WHERE " + " ";
+		
+		return queryFrom;
+	}
+	
+	private static Class EntityClassFromString(List<String> hqlDecomp, Set<Class<?>> entities)
+	{
+		int indexFrom = hqlDecomp.indexOf("FROM");
+		String entity = hqlDecomp.get(indexFrom + 1);
+		Class<?> clazz = entities.stream().filter(c -> c.getSimpleName().equals(entity)).findFirst().orElse(null);
+		
+		return clazz;
+	}
 }

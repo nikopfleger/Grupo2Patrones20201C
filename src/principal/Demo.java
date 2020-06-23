@@ -44,14 +44,17 @@ public class Demo
 	   // Prueba ByteBuddy Cliente
 //	   Cliente cliente = MyHibernate.find(Cliente.class,1);
 //	   System.out.println(cliente.getTipoCliente().getDescripcion());
-
-	   Set<Class<?>> prueba = MyHibernate.test(Empleado.class);
 	   
 	   // Pruebas Entidades find - 1era Entrega
 	   //PruebaFindEntidades();
 	   // Pruebas Entidades findAll - 2da Entrega
 	   //PruebaFindAllEntidades();
-	   MyHibernate.createQuery("FROM Empleado e");
+	   
+	   String hql="";
+	   hql+="FROM Producto p ";
+	   hql+="WHERE p.proveedor.empresa=:emp ";
+	   
+	   MyHibernate.createQuery(hql);
    }
    
    private static void PruebaFindAllEntidades()
