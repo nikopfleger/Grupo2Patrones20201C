@@ -368,10 +368,46 @@ public class MyHibernate
 		return queryFrom;
 	}
 	
-	private static String buildQueryJoin(List<String> hqlDecomp, Set<Class<?>> entities, Map<String, Class<?>> aliases) {
-		String queryFrom = "";
+	private static String buildQueryJoin(List<String> hqlDecomp, Set<Class<?>> entities,
+			Map<String, Class<?>> aliases) {
+		String queryJoin = "";
+
+		int indexJoin = hqlDecomp.indexOf("JOIN");
+		int indexWhere = hqlDecomp.indexOf("WHERE");
 		
-		return queryFrom;
+
+		List<String> joinClause = hqlDecomp.subList(indexJoin, indexWhere);
+		System.out.println(joinClause);
+		try {
+			while (joinClause.indexOf("JOIN") != -1) {
+				List<String> toJoin = Arrays.asList(joinClause.get(1).split("\\."));
+				String alias = toJoin.get(0);
+				String atribute = toJoin.get(1);
+				Class<?> clazz = aliases.get(alias);
+				Field field = clazz.getDeclaredField(atribute);
+				String campo = field.getAnnotation(ann.JoinColumn.class).name();
+				Class<?> classToJoin = field.getType();
+				String tableToJoin = classToJoin.getAnnotation(ann.Table.class).name();
+				String idColumnToJoin = GetIdColumn(classToJoin);
+				String aliasJoin = joinClause.get(3);
+				aliases.put(aliasJoin, classToJoin);
+				queryJoin += "LEFT JOIN " + tableToJoin+" AS " + aliasJoin + " ON " 
+								+ alias + "." + campo + " = " + aliasJoin + "." + idColumnToJoin + " ";
+				
+//				WHERE c.descripcion = :desc
+				
+//				LEFT JOIN tabla as aliasJoin ON alias.campo = aliasJoin.idColumnToJoin
+				if(joinClause.size() > 4){
+					joinClause = joinClause.subList(4, 8);
+				}else{
+					joinClause = new ArrayList<String>();
+				}
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return queryJoin;
 	}
 	
 	private static String buildQueryWhere(List<String> hqlDecomp, Set<Class<?>> entities, Map<String, Class<?>> aliases) {
@@ -397,5 +433,15 @@ public class MyHibernate
 		Class<?> clazz = entities.stream().filter(c -> c.getSimpleName().equals(entity)).findFirst().orElse(null);
 		
 		return clazz;
+	}
+	
+	private static String GetIdColumn(Class<?> clazz){
+		Field[] fields = clazz.getDeclaredFields();
+		for(Field field : fields){
+			if(field.isAnnotationPresent(ann.Id.class)){
+				return field.getDeclaredAnnotation(ann.Column.class).name();
+			}
+		}
+		return "";
 	}
 }
