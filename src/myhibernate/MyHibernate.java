@@ -377,9 +377,9 @@ public class MyHibernate
 		
 
 		List<String> joinClause = hqlDecomp.subList(indexJoin, indexWhere);
-		System.out.println(joinClause);
 		try {
 			while (joinClause.indexOf("JOIN") != -1) {
+				System.out.println(joinClause);
 				List<String> toJoin = Arrays.asList(joinClause.get(1).split("\\."));
 				String alias = toJoin.get(0);
 				String atribute = toJoin.get(1);
@@ -398,7 +398,7 @@ public class MyHibernate
 				
 //				LEFT JOIN tabla as aliasJoin ON alias.campo = aliasJoin.idColumnToJoin
 				if(joinClause.size() > 4){
-					joinClause = joinClause.subList(4, 8);
+					joinClause = joinClause.subList(4, joinClause.size());
 				}else{
 					joinClause = new ArrayList<String>();
 				}
@@ -407,6 +407,7 @@ public class MyHibernate
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println(queryJoin);
 		return queryJoin;
 	}
 	

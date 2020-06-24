@@ -51,7 +51,8 @@ public class Demo
 	   //PruebaFindAllEntidades();
 	   
 	   String hql="";
-	   hql+="FROM Producto p ";
+	   hql+="FROM Empleado e ";
+	   hql+="JOIN e.jefe AS jefe JOIN jefe.jefe AS superjefe ";
 	   hql+="WHERE p.proveedor.empresa=:emp ";
 	   
 	   MyHibernate.createQuery(hql);
