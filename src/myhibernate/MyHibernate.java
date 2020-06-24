@@ -163,7 +163,7 @@ public class MyHibernate
 		String queryJoin = buildQueryJoin(hqlDecomp, entities, aliases);
 		String queryWhere = buildQueryWhere(hqlDecomp, entities, aliases);
 		
-		System.out.println(queryFrom);
+		System.out.println(queryFrom + queryJoin + queryWhere);
 	
 		return new Query(queryFrom + queryJoin + queryWhere);
 	}
@@ -375,19 +375,80 @@ public class MyHibernate
 	}
 	
 	private static String buildQueryWhere(List<String> hqlDecomp, Set<Class<?>> entities, Map<String, Class<?>> aliases) {
-		String queryFrom = "";
+		String queryWhere = "WHERE ";
 		Class<?> clazz = EntityClassFromString(hqlDecomp, entities);
-		Field[] fields = clazz.getDeclaredFields();
 		
 		// Ver en caso de que si hay AND dividir por esta palabra y hacer un foreach por cada division del AND
 		int indexWhere = hqlDecomp.indexOf("WHERE");
-		String whereEqual = hqlDecomp.get(indexWhere + 1);
-		List<String> whereDecomp = Arrays.asList(whereEqual.split("=:"));
-		String entityProp = whereDecomp.get(0);
+		List<String> whereClause = hqlDecomp.subList(indexWhere, hqlDecomp.size());
+		String tableName = "";
+		String fieldName = "";
+		String idName = "";
+		String joinFields = "";
 		
-		queryFrom = "WHERE " + " ";
+		int counter = 1;
+		while (whereClause.indexOf("WHERE") != -1 || whereClause.indexOf("AND") != -1)
+		{
+			String entityProp = whereClause.get(1);
+			List<String> entityPropDecomp = Arrays.asList(entityProp.split("\\."));
+			if (entityPropDecomp.size() > 2) {
+				Field[] fields = clazz.getDeclaredFields();
+				String alias = entityPropDecomp.get(1);
+
+				
+				for (int i=0; i<fields.length; i++)
+		        {
+					System.out.print(fields[i].getName() + "\n");
+					if (fields[i].getName().equals(entityPropDecomp.get(1))) {
+						if(fields[i].isAnnotationPresent(JoinColumn.class))
+						{
+							String columnIdFK = fields[i].getAnnotation(JoinColumn.class).name();
+							tableName=fields[i].getType().getDeclaredAnnotation(Table.class).name();
+							idName=GetIdColumn(fields[i].getType());
+							// Crear JOIN y devolver JOIN
+							joinFields += "LEFT JOIN " + tableName + " AS " + "a" + counter + " ON " + alias + "." + columnIdFK + " = " + "a" + counter + "." + idName + " ";
+						} 
+						else if(fields[i].isAnnotationPresent(Column.class)) {
+							fieldName=fields[i].getName();
+							// Devolver nombre del campo
+						}
+					}
+		        }
+				counter++;
+				if(whereClause.size() > 4){
+					whereClause = whereClause.subList(whereClause.indexOf("AND"), whereClause.size());
+				}else{
+					whereClause = new ArrayList<String>();
+				}
+				queryWhere += "a" + counter + "." + entityPropDecomp.get(2) + " " + whereClause.get(2) + " " + whereClause.get(3) + " " + "AND ";
+
+			}
+			else 
+			{
+				try {
+					String alias = entityPropDecomp.get(0);
+					Class<?> clase = aliases.get(alias);
+					Field field = clase.getDeclaredField(entityPropDecomp.get(1));
+					String columnName = field.getDeclaredAnnotation(Column.class).name();
+					queryWhere += alias + "." + columnName + " " + whereClause.get(2) + " " + whereClause.get(3) + " " + "AND ";
+					if(whereClause.size() > 4){
+						whereClause = whereClause.subList(whereClause.indexOf("AND"), whereClause.size());
+					}else{
+						whereClause = new ArrayList<String>();
+					}
+				}
+				catch (Exception ex)
+				{
+					ex.printStackTrace();
+				}
+			}
+		};
 		
-		return queryFrom;
+		queryWhere = queryWhere.substring(0, queryWhere.length() - 4);
+		
+//		queryFrom = "WHERE " + " ";
+		
+		return joinFields + queryWhere;
 	}
 	
 	private static Class EntityClassFromString(List<String> hqlDecomp, Set<Class<?>> entities)
@@ -397,5 +458,15 @@ public class MyHibernate
 		Class<?> clazz = entities.stream().filter(c -> c.getSimpleName().equals(entity)).findFirst().orElse(null);
 		
 		return clazz;
+	}
+	
+	private static String GetIdColumn(Class<?> clazz){
+		Field[] fields = clazz.getDeclaredFields();
+		for(Field field : fields){
+			if(field.isAnnotationPresent(ann.Id.class)){
+				return field.getDeclaredAnnotation(ann.Column.class).name();
+			}
+		}
+		return "";
 	}
 }

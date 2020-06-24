@@ -17,9 +17,7 @@ public class Query
 	   System.out.println(pValue.getClass());
        System.out.println(java.lang.Character.class);
 
-	   if ((pValue instanceof String) || (pValue instanceof Number) || (pValue.getClass().equals(java.lang.Character.class)))
-		  hql = hql.replace(":" + pName, pValue.toString());
-	   
+       hql = hql.replace(":" + pName, pValue.toString());
    }
 
    public <T> List<T> getResultList()

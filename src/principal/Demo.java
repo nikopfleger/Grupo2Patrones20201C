@@ -32,6 +32,7 @@ public class Demo
 //      // tercer caso: HQL
 //      String hql="";
 //      hql+="FROM Producto p ";
+	   
 //      hql+="WHERE p.proveedor.empresa=:emp ";
 //      Query q = MyHibernate.createQuery(hql);
 //      q.setParameter("emp","Sony");
@@ -51,8 +52,8 @@ public class Demo
 	   //PruebaFindAllEntidades();
 	   
 	   String hql="";
-	   hql+="FROM Producto p ";
-	   hql+="WHERE p.proveedor.empresa=:emp ";
+	   hql+="FROM Empleado e ";
+	   hql+="WHERE e.jefe.nombre = :emp AND e.nombre = :nombre";
 	   
 	   MyHibernate.createQuery(hql);
    }
