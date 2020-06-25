@@ -54,8 +54,11 @@ public class Demo
 	   String hql="";
 	   hql+="FROM Empleado e ";
 	   hql+="WHERE e.jefe.nombre = :emp AND e.jefe.nombre = :nombre";
+	   Query q = MyHibernate.createQuery(hql);
+	   q.setParameter("emp","Empresa");
+	   q.setParameter("nombre","Nombre");
 	   
-	   MyHibernate.createQuery(hql);
+	   System.out.print(q.getHql());
    }
    
    private static void PruebaFindAllEntidades()

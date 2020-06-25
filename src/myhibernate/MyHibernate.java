@@ -18,6 +18,7 @@ import java.util.Set;
 import org.reflections.Reflections;
 
 import Entities.Producto;
+import MyHibernateProperties.HibernatePropertyValues;
 import ann.Column;
 import ann.Entity;
 import ann.Id;
@@ -140,36 +141,43 @@ public class MyHibernate
 
 	public static Query createQuery(String hql)
 	{
-		Reflections reflections = new Reflections("Entities"); 
-		Set<Class<?>> entities = 
-		    reflections.getTypesAnnotatedWith(ann.Entity.class);
-		Map<String, Class<?>> aliases = new HashMap<>();
+		try {
+			// Setup
+			HibernatePropertyValues properties = new HibernatePropertyValues();
+			String entitiesPackage = properties.getPropValues("packageEntities");
+			Reflections reflections = new Reflections(entitiesPackage); 
+			Set<Class<?>> entities = 
+			    reflections.getTypesAnnotatedWith(ann.Entity.class);
+			Map<String, Class<?>> aliases = new HashMap<>();
+			
+			String query = "";
+			
+			List<String> hqlDecomp = Arrays.asList(hql.split(" "));
+//			List<String> sqlKeyWords = Arrays.asList("from","where","join");
+//			List<Integer> indexKeyWords = new ArrayList<Integer>();
+			
+//			for (int i = 0; i < hqlDecomp.size(); i++) {
+//		        if (sqlKeyWords.contains(hqlDecomp.get(i).toLowerCase())) {
+//		            indexKeyWords.add(i);
+//		        }
+//		    }
+			
+			// Construccion SQL Query
+			String queryFrom = buildQueryFrom(hqlDecomp, entities, aliases) + "\n";
+			String queryJoinResponse = buildQueryJoin(hqlDecomp, entities, aliases);
+			String queryJoin = queryJoinResponse.length() > 0 ?
+							   queryJoinResponse + "\n" :
+							   "";
+			String queryWhere = buildQueryWhere(hqlDecomp, entities, aliases);
+			
+			String querySQL = queryFrom + queryJoin + queryWhere;
+			System.out.println(querySQL);
 		
-		String query = "";
-		
-		List<String> hqlDecomp = Arrays.asList(hql.split(" "));
-		
-		List<String> sqlKeyWords = Arrays.asList("from","where","join");
-		
-		List<Integer> indexKeyWords = new ArrayList<Integer>();
-		
-//		for (int i = 0; i < hqlDecomp.size(); i++) {
-//	        if (sqlKeyWords.contains(hqlDecomp.get(i).toLowerCase())) {
-//	            indexKeyWords.add(i);
-//	        }
-//	    }
-		
-		String queryFrom = buildQueryFrom(hqlDecomp, entities, aliases) + "\n";
-		String queryJoinResponse = buildQueryJoin(hqlDecomp, entities, aliases);
-		String queryJoin = queryJoinResponse.length() > 0 ?
-						   queryJoinResponse + "\n" :
-						   "";
-		String queryWhere = buildQueryWhere(hqlDecomp, entities, aliases);
-		
-		String querySQL = queryFrom + queryJoin + queryWhere;
-		System.out.println(querySQL);
-	
-		return new Query(querySQL);
+			return new Query(querySQL);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	private static <T> String SQLQuery(Class<T> clazz) 
