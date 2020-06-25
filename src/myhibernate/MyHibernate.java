@@ -32,7 +32,7 @@ public class MyHibernate
 {
 	private static DBManager db;
 	private static HashMap<String,String> joinHm;
-	private static Map<Class<?>, Class<?>> clasesMejoradas = new HashMap<>();
+	public static Map<Class<?>, Class<?>> clasesMejoradas = new HashMap<>();
 	
 
 	public static <T> T find(Class<T> clazz, int id)
@@ -148,7 +148,7 @@ public class MyHibernate
 			Reflections reflections = new Reflections(entitiesPackage); 
 			Set<Class<?>> entities = 
 			    reflections.getTypesAnnotatedWith(ann.Entity.class);
-			Map<String, Class<?>> aliases = new HashMap<>();
+			Map<String, Class<?>> aliases = new HashMap<>();		
 			
 			String query = "";
 			
@@ -169,11 +169,12 @@ public class MyHibernate
 							   queryJoinResponse + "\n" :
 							   "";
 			String queryWhere = buildQueryWhere(hqlDecomp, entities, aliases);
-			
 			String querySQL = queryFrom + queryJoin + queryWhere;
 			System.out.println(querySQL);
+			
+			Class<?> clazz = EntityClassFromString(hqlDecomp, entities);
 		
-			return new Query(querySQL);
+			return new Query(querySQL, clazz);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -205,7 +206,7 @@ public class MyHibernate
 		return sqlQuery;
 	}
 
-	private static <T> T GetInstance(Class<?> dtoClass)
+	public static <T> T GetInstance(Class<?> dtoClass)
 	{
 		try
 		{
@@ -267,7 +268,7 @@ public class MyHibernate
 		return idColumnName;
 	}
 
-	private static <T> void InvokeSetters(Object dto, ResultSet rs, Class dtoClass, T returnedObject)
+	public static <T> void InvokeSetters(Object dto, ResultSet rs, Class dtoClass, T returnedObject)
 	{
 		Field[] fields = dtoClass.getDeclaredFields();
 		Object valueColumn = null;

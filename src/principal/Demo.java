@@ -55,7 +55,7 @@ public class Demo
 	   hql+="FROM Empleado e ";
 	   hql+="WHERE e.jefe.nombre = :nombre";
 	   Query q = MyHibernate.createQuery(hql);
-	   q.setParameter("nombre","Reynaldo Jauregui");
+	   q.setParameter("nombre", 1);
 	   
 	   List<Empleado> lst2 = q.getResultList();
 
