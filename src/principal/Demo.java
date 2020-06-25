@@ -53,11 +53,12 @@ public class Demo
 	   
 	   String hql="";
 	   hql+="FROM Empleado e ";
-	   hql+="WHERE e.jefe.nombre = :emp AND e.jefe.nombre = :nombre";
+	   hql+="WHERE e.jefe.nombre = :nombre";
 	   Query q = MyHibernate.createQuery(hql);
-	   q.setParameter("emp","Empresa");
-	   q.setParameter("nombre","Nombre");
+	   q.setParameter("nombre","Reynaldo Jauregui");
 	   
+	   List<Empleado> lst2 = q.getResultList();
+
 	   System.out.print(q.getHql());
    }
    
