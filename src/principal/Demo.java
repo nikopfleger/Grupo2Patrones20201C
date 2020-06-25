@@ -53,7 +53,7 @@ public class Demo
 	   
 	   String hql="";
 	   hql+="FROM Empleado e ";
-	   hql+="WHERE e.jefe.nombre = :emp AND e.nombre = :nombre";
+	   hql+="WHERE e.jefe.nombre = :emp AND e.jefe.nombre = :nombre";
 	   
 	   MyHibernate.createQuery(hql);
    }

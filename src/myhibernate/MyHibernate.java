@@ -159,13 +159,17 @@ public class MyHibernate
 //	        }
 //	    }
 		
-		String queryFrom = buildQueryFrom(hqlDecomp, entities, aliases);
-		String queryJoin = buildQueryJoin(hqlDecomp, entities, aliases);
+		String queryFrom = buildQueryFrom(hqlDecomp, entities, aliases) + "\n";
+		String queryJoinResponse = buildQueryJoin(hqlDecomp, entities, aliases);
+		String queryJoin = queryJoinResponse.length() > 0 ?
+						   queryJoinResponse + "\n" :
+						   "";
 		String queryWhere = buildQueryWhere(hqlDecomp, entities, aliases);
 		
-		System.out.println(queryFrom + queryJoin + queryWhere);
+		String querySQL = queryFrom + queryJoin + queryWhere;
+		System.out.println(querySQL);
 	
-		return new Query(queryFrom + queryJoin + queryWhere);
+		return new Query(querySQL);
 	}
 	
 	private static <T> String SQLQuery(Class<T> clazz) 
@@ -369,44 +373,38 @@ public class MyHibernate
 	}
 	
 	private static String buildQueryJoin(List<String> hqlDecomp, Set<Class<?>> entities,
-			Map<String, Class<?>> aliases) {
+		Map<String, Class<?>> aliases) {
 		String queryJoin = "";
 
 		int indexJoin = hqlDecomp.indexOf("JOIN");
 		int indexWhere = hqlDecomp.indexOf("WHERE");
-		
 
-		List<String> joinClause = hqlDecomp.subList(indexJoin, indexWhere);
-		try {
-			while (joinClause.indexOf("JOIN") != -1) {
-				System.out.println(joinClause);
-				List<String> toJoin = Arrays.asList(joinClause.get(1).split("\\."));
-				String alias = toJoin.get(0);
-				String atribute = toJoin.get(1);
-				Class<?> clazz = aliases.get(alias);
-				Field field = clazz.getDeclaredField(atribute);
-				String campo = field.getAnnotation(ann.JoinColumn.class).name();
-				Class<?> classToJoin = field.getType();
-				String tableToJoin = classToJoin.getAnnotation(ann.Table.class).name();
-				String idColumnToJoin = GetIdColumn(classToJoin);
-				String aliasJoin = joinClause.get(3);
-				aliases.put(aliasJoin, classToJoin);
-				queryJoin += "LEFT JOIN " + tableToJoin+" AS " + aliasJoin + " ON " 
-								+ alias + "." + campo + " = " + aliasJoin + "." + idColumnToJoin + " ";
-				
-//				WHERE c.descripcion = :desc
-				
-//				LEFT JOIN tabla as aliasJoin ON alias.campo = aliasJoin.idColumnToJoin
-				if(joinClause.size() > 4){
-					joinClause = joinClause.subList(4, joinClause.size());
-				}else{
-					joinClause = new ArrayList<String>();
+		if (indexJoin != -1) {
+			List<String> joinClause = hqlDecomp.subList(indexJoin, indexWhere);
+			try {
+				while (joinClause.indexOf("JOIN") != -1) {
+					List<String> toJoin = Arrays.asList(joinClause.get(1).split("\\."));
+					String alias = toJoin.get(0);
+					String atribute = toJoin.get(1);
+					Class<?> clazz = aliases.get(alias);
+					Field field = clazz.getDeclaredField(atribute);
+					String campo = field.getAnnotation(ann.JoinColumn.class).name();
+					Class<?> classToJoin = field.getType();
+					String tableToJoin = classToJoin.getAnnotation(ann.Table.class).name();
+					String idColumnToJoin = GetIdColumn(classToJoin);
+					String aliasJoin = joinClause.get(3);
+					aliases.put(aliasJoin, classToJoin);
+					
+					// LEFT JOIN tabla as aliasJoin ON alias.campo = aliasJoin.idColumnToJoin
+					queryJoin += "LEFT JOIN " + tableToJoin+" AS " + aliasJoin + " ON " 
+									+ alias + "." + campo + " = " + aliasJoin + "." + idColumnToJoin + " ";
+					joinClause = SubListClause(joinClause, 4);
 				}
-				
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+		
 		System.out.println(queryJoin);
 		return queryJoin;
 	}
@@ -419,7 +417,6 @@ public class MyHibernate
 		int indexWhere = hqlDecomp.indexOf("WHERE");
 		List<String> whereClause = hqlDecomp.subList(indexWhere, hqlDecomp.size());
 		String tableName = "";
-		String fieldName = "";
 		String idName = "";
 		String joinFields = "";
 		
@@ -428,37 +425,33 @@ public class MyHibernate
 		{
 			String entityProp = whereClause.get(1);
 			List<String> entityPropDecomp = Arrays.asList(entityProp.split("\\."));
-			if (entityPropDecomp.size() > 2) {
+			String entityName = entityPropDecomp.get(1);
+			String entityColumn = entityPropDecomp.get(2);
+			String equalSign = whereClause.get(2);
+			String variable = whereClause.get(3);
+			
+			if (entityPropDecomp.size() > 2) 
+			{
 				Field[] fields = clazz.getDeclaredFields();
 				String alias = entityPropDecomp.get(1);
-
 				
 				for (int i=0; i<fields.length; i++)
 		        {
-					System.out.print(fields[i].getName() + "\n");
-					if (fields[i].getName().equals(entityPropDecomp.get(1))) {
+					if (fields[i].getName().equals(entityName)) {
 						if(fields[i].isAnnotationPresent(JoinColumn.class))
 						{
 							String columnIdFK = fields[i].getAnnotation(JoinColumn.class).name();
-							tableName=fields[i].getType().getDeclaredAnnotation(Table.class).name();
-							idName=GetIdColumn(fields[i].getType());
-							// Crear JOIN y devolver JOIN
+							tableName = fields[i].getType().getDeclaredAnnotation(Table.class).name();
+							idName = GetIdColumn(fields[i].getType());
+							// Construccion JOIN
 							joinFields += "LEFT JOIN " + tableName + " AS " + "a" + counter + " ON " + alias + "." + columnIdFK + " = " + "a" + counter + "." + idName + " ";
 						} 
-						else if(fields[i].isAnnotationPresent(Column.class)) {
-							fieldName=fields[i].getName();
-							// Devolver nombre del campo
-						}
 					}
 		        }
+				// Construccion WHERE
+				queryWhere += "a" + counter + "." + entityColumn + " " + equalSign + " " + variable + " " + "AND ";
+				whereClause = SubListClause(whereClause, "AND");
 				counter++;
-				if(whereClause.size() > 4){
-					whereClause = whereClause.subList(whereClause.indexOf("AND"), whereClause.size());
-				}else{
-					whereClause = new ArrayList<String>();
-				}
-				queryWhere += "a" + counter + "." + entityPropDecomp.get(2) + " " + whereClause.get(2) + " " + whereClause.get(3) + " " + "AND ";
-
 			}
 			else 
 			{
@@ -467,12 +460,9 @@ public class MyHibernate
 					Class<?> clase = aliases.get(alias);
 					Field field = clase.getDeclaredField(entityPropDecomp.get(1));
 					String columnName = field.getDeclaredAnnotation(Column.class).name();
-					queryWhere += alias + "." + columnName + " " + whereClause.get(2) + " " + whereClause.get(3) + " " + "AND ";
-					if(whereClause.size() > 4){
-						whereClause = whereClause.subList(whereClause.indexOf("AND"), whereClause.size());
-					}else{
-						whereClause = new ArrayList<String>();
-					}
+					// Construccion WHERE
+					queryWhere += alias + "." + columnName + " " + equalSign + " " + variable + " " + "AND ";
+					whereClause = SubListClause(whereClause, "AND");
 				}
 				catch (Exception ex)
 				{
@@ -488,7 +478,25 @@ public class MyHibernate
 		return joinFields + queryWhere;
 	}
 	
-	private static Class EntityClassFromString(List<String> hqlDecomp, Set<Class<?>> entities)
+	private static List<String> SubListClause(List<String> clauseList, String keyWord) {
+		if(clauseList.size() > 4){
+			clauseList = clauseList.subList(clauseList.indexOf(keyWord), clauseList.size());
+		}else{
+			clauseList = new ArrayList<String>();
+		}
+		return clauseList;
+	}
+	
+	private static List<String> SubListClause(List<String> clauseList, int index) {
+		if(clauseList.size() > 4){
+			clauseList = clauseList.subList(index, clauseList.size());
+		}else{
+			clauseList = new ArrayList<String>();
+		}
+		return clauseList;
+	}
+	
+	private static Class<?> EntityClassFromString(List<String> hqlDecomp, Set<Class<?>> entities)
 	{
 		int indexFrom = hqlDecomp.indexOf("FROM");
 		String entity = hqlDecomp.get(indexFrom + 1);
