@@ -18,7 +18,6 @@ public class MyInterceptor
             if (campo == null) {
             	Class clasePadre = self.getClass();
             	String methodName = armaGetter(field.getName());
-            	System.out.println(methodName);
             	Method mtd = clasePadre.getMethod(methodName);
             	int id = (int) mtd.invoke(self);
                 field.set(self, MyHibernate.find(type,id));

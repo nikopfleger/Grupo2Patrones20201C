@@ -153,27 +153,20 @@ public class MyHibernate
 			String query = "";
 			
 			List<String> hqlDecomp = Arrays.asList(hql.split(" "));
-//			List<String> sqlKeyWords = Arrays.asList("from","where","join");
-//			List<Integer> indexKeyWords = new ArrayList<Integer>();
-			
-//			for (int i = 0; i < hqlDecomp.size(); i++) {
-//		        if (sqlKeyWords.contains(hqlDecomp.get(i).toLowerCase())) {
-//		            indexKeyWords.add(i);
-//		        }
-//		    }
 			
 			// Construccion SQL Query
-			String queryFrom = buildQueryFrom(hqlDecomp, entities, aliases) + "\n";
+			String queryFrom = buildQueryFrom(hqlDecomp, entities, aliases) + " ";
 			String queryJoinResponse = buildQueryJoin(hqlDecomp, entities, aliases);
 			String queryJoin = queryJoinResponse.length() > 0 ?
 							   queryJoinResponse + "\n" :
 							   "";
 			String queryWhere = buildQueryWhere(hqlDecomp, entities, aliases);
-			String querySQL = queryFrom + queryJoin + queryWhere;
+			String querySQL = "SELECT * "+queryFrom + queryJoin + queryWhere;
 			System.out.println(querySQL);
 			
 			Class<?> clazz = EntityClassFromString(hqlDecomp, entities);
 		
+			
 			return new Query(querySQL, clazz);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -274,7 +267,6 @@ public class MyHibernate
 		Object valueColumn = null;
 		Class<?> columnType;
 		String attName = "";
-
 		try
 		{
 			for(Field field:fields)
@@ -285,15 +277,14 @@ public class MyHibernate
 				
 				if(field.getAnnotation(Column.class) != null)
 				{
-
-					valueColumn = rs.getObject("a0" + field.getAnnotation(Column.class).name());
+					valueColumn = rs.getObject(field.getAnnotation(Column.class).name());
 					SettersPrimitiveTypes(dto, attName, valueColumn, columnType);
 				}
 				else
 				{
 					if(field.getDeclaredAnnotation(JoinColumn.class) != null)
 					{ 
-						valueColumn = rs.getObject("a0"+ field.getAnnotation(JoinColumn.class).name());
+						valueColumn = rs.getObject(field.getAnnotation(JoinColumn.class).name());
 						SettersPrimitiveTypes(dto,attName+"IdByteBuddy",valueColumn,int.class);
 					}
 				}
@@ -442,7 +433,7 @@ public class MyHibernate
 			if (entityPropDecomp.size() > 2) 
 			{
 				Field[] fields = clazz.getDeclaredFields();
-				String alias = entityPropDecomp.get(1);
+				String alias = entityPropDecomp.get(0);
 				
 				for (int i=0; i<fields.length; i++)
 		        {

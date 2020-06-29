@@ -1,6 +1,7 @@
 package myhibernate;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class Query
 		try
 		{
 			// Ejecucion de la query
-		    rs = db.ExecuteQuery(hql);
+		    rs = db.ExecuteQuery(hql);  
 		    
 		    if(rs == null) System.out.println("Tabla Vacia");
 		    do{

@@ -49,16 +49,21 @@ public class Demo
 	   // Pruebas Entidades find - 1era Entrega
 	   //PruebaFindEntidades();
 	   // Pruebas Entidades findAll - 2da Entrega
-	   //PruebaFindAllEntidades();
+//	   PruebaFindAllEntidades(); 
 	   
 	   String hql="";
-	   hql+="FROM Empleado e ";
-	   hql+="WHERE e.jefe.nombre = :nombre";
+//	   hql+="FROM Empleado e ";
+//	   hql+="WHERE e.jefe.nombre = :nombre";
+	   hql += "FROM Producto p ";
+	   hql += "WHERE p.proveedor.empresa = :empresa ";
 	   Query q = MyHibernate.createQuery(hql);
-	   q.setParameter("nombre", 1);
+	   q.setParameter("empresa", "Sony");
 	   
-	   List<Empleado> lst2 = q.getResultList();
+	   List<Producto> lst2 = q.getResultList();
 
+	   for (Producto producto : lst2) {
+		System.out.println(producto.getProveedor().getEmpresa());
+	}
 	   System.out.print(q.getHql());
    }
    
@@ -72,12 +77,12 @@ public class Demo
 //       }
        
        //Cliente
-//       List<Cliente> lstCli = MyHibernate.findAll(Cliente.class);
-//       for(Cliente clx:lstCli)
-//       {
-//          System.out.println(clx.getNombre() + ", " + clx.getDireccion());
-//          System.out.println(clx.getTipoCliente() + ", " + clx.getTipoCliente().getDescripcion());
-//       }
+       List<Cliente> lstCli = MyHibernate.findAll(Cliente.class);
+       for(Cliente clx:lstCli)
+       {
+          System.out.println(clx.getNombre() + ", " + clx.getDireccion());
+          System.out.println(clx.getTipoCliente() + ", " + clx.getTipoCliente().getDescripcion());
+       }
        
 	   // DetalleOrden
 //	   List<DetalleOrden> lstDetOrd = MyHibernate.findAll(DetalleOrden.class);
