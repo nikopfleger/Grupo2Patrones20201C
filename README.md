@@ -37,6 +37,6 @@ packageEntities=Entities
 
 Las dependecias que se utilizaron son las siguientes:
 * HSQLDB
-* ByteBuddy
-* Reflections
-* Javaassist (necesaria para poder correr Reflections)
+* ByteBuddy 1.10.10
+* Reflections 0.9.12
+* Javaassist 3.26.0 (necesaria para poder correr Reflections)
