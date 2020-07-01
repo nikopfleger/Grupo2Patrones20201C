@@ -22,7 +22,7 @@ Este texto hace referencia a las dependencias del proyecto.
 	<classpathentry kind="output" path="bin"/>
 </classpath>
 ```
-Una vez copiado el contenido se debe de cambiar la ubicación de estas dependecias por las que estan en el proyecto.
+Una vez copiado el contenido se debe de cambiar la ubicación de estas dependecias por las que estan la carpeta /src.
 
 ### Archivo config.properties
 
