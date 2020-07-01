@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.reflections.Reflections;
 
+import Entities.Cliente;
 import Entities.Producto;
 import MyHibernateProperties.HibernatePropertyValues;
 import ann.Column;
@@ -158,14 +159,12 @@ public class MyHibernate
 			String queryFrom = buildQueryFrom(hqlDecomp, entities, aliases) + " ";
 			String queryJoinResponse = buildQueryJoin(hqlDecomp, entities, aliases);
 			String queryJoin = queryJoinResponse.length() > 0 ?
-							   queryJoinResponse + "\n" :
+							   queryJoinResponse + " " :
 							   "";
 			String queryWhere = buildQueryWhere(hqlDecomp, entities, aliases);
-			String querySQL = "SELECT * "+queryFrom + queryJoin + queryWhere;
-			System.out.println(querySQL);
+			String querySQL = "SELECT * " + queryFrom + queryJoin + queryWhere;
 			
 			Class<?> clazz = EntityClassFromString(hqlDecomp, entities);
-		
 			
 			return new Query(querySQL, clazz);
 		} catch (Exception e) {
@@ -410,12 +409,12 @@ public class MyHibernate
 	}
 	
 	private static String buildQueryWhere(List<String> hqlDecomp, Set<Class<?>> entities, Map<String, Class<?>> aliases) {
-		String queryWhere = "WHERE ";
+		String queryWhere = "";
 		Class<?> clazz = EntityClassFromString(hqlDecomp, entities);
 		
 		// Ver en caso de que si hay AND dividir por esta palabra y hacer un foreach por cada division del AND
 		int indexWhere = hqlDecomp.indexOf("WHERE");
-		List<String> whereClause = hqlDecomp.subList(indexWhere, hqlDecomp.size());
+		List<String> whereClause = indexWhere != -1 ? hqlDecomp.subList(indexWhere, hqlDecomp.size()) : new ArrayList<String>();
 		String tableName = "";
 		String idName = "";
 		String joinFields = "";
@@ -423,15 +422,16 @@ public class MyHibernate
 		int counter = 1;
 		while (whereClause.indexOf("WHERE") != -1 || whereClause.indexOf("AND") != -1)
 		{
+			queryWhere = "WHERE ";
 			String entityProp = whereClause.get(1);
 			List<String> entityPropDecomp = Arrays.asList(entityProp.split("\\."));
-			String entityName = entityPropDecomp.get(1);
-			String entityColumn = entityPropDecomp.get(2);
 			String equalSign = whereClause.get(2);
 			String variable = whereClause.get(3);
 			
 			if (entityPropDecomp.size() > 2) 
 			{
+				String entityName = entityPropDecomp.get(1);
+				String entityColumn = entityPropDecomp.get(2);
 				Field[] fields = clazz.getDeclaredFields();
 				String alias = entityPropDecomp.get(0);
 				
@@ -448,6 +448,18 @@ public class MyHibernate
 						} 
 					}
 		        }
+				
+				// Field Annotation name
+				entityName = clazz.getName().contains("Empleado") && entityName.equals("jefe") ? 
+							"Empleado" : 
+							entityName.substring(0, 1).toUpperCase() + entityName.substring(1);
+				Class<?> entityClazz = EntityClassFromString(entityName, entities);
+				Field[] fieldsEntity = entityClazz.getDeclaredFields();
+				for (Field field : fieldsEntity) {
+					if (field.getName().equals(entityColumn))
+						entityColumn = field.getAnnotation(Column.class).name();
+				}
+				
 				// Construccion WHERE
 				queryWhere += "a" + counter + "." + entityColumn + " " + equalSign + " " + variable + " " + "AND ";
 				whereClause = SubListClause(whereClause, "AND");
@@ -471,9 +483,7 @@ public class MyHibernate
 			}
 		};
 		
-		queryWhere = queryWhere.substring(0, queryWhere.length() - 4);
-		
-//		queryFrom = "WHERE " + " ";
+		queryWhere = queryWhere.length() > 0 ? queryWhere.substring(0, queryWhere.length() - 4) : "";
 		
 		return joinFields + queryWhere;
 	}
@@ -501,6 +511,13 @@ public class MyHibernate
 		int indexFrom = hqlDecomp.indexOf("FROM");
 		String entity = hqlDecomp.get(indexFrom + 1);
 		Class<?> clazz = entities.stream().filter(c -> c.getSimpleName().equals(entity)).findFirst().orElse(null);
+		
+		return clazz;
+	}
+	
+	private static Class<?> EntityClassFromString(String entityName, Set<Class<?>> entities)
+	{
+		Class<?> clazz = entities.stream().filter(c -> c.getSimpleName().equals(entityName)).findFirst().orElse(null);
 		
 		return clazz;
 	}

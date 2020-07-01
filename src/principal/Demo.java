@@ -29,44 +29,146 @@ public class Demo
 //         System.out.println(px.getDescripcion()+", "+px.getProveedor().getEmpresa());         
 //      }
       
-//      // tercer caso: HQL
+      // tercer caso: HQL
 //      String hql="";
-//      hql+="FROM Producto p ";
-	   
-//      hql+="WHERE p.proveedor.empresa=:emp ";
+//      hql += "FROM Producto p ";	   
+//      hql += "WHERE p.proveedor.empresa = :emp ";
 //      Query q = MyHibernate.createQuery(hql);
 //      q.setParameter("emp","Sony");
+//      
 //      List<Producto> lst2 = q.getResultList();
 //      for(Producto px:lst2)
 //      {
 //         System.out.println(px.getDescripcion()+", "+px.getProveedor().getEmpresa());         
 //      }
 	   
-	   // Prueba ByteBuddy Cliente
-//	   Cliente cliente = MyHibernate.find(Cliente.class,1);
-//	   System.out.println(cliente.getTipoCliente().getDescripcion());
-	   
 	   // Pruebas Entidades find - 1era Entrega
-	   //PruebaFindEntidades();
+//	   PruebaFindEntidades();
+	   
 	   // Pruebas Entidades findAll - 2da Entrega
-//	   PruebaFindAllEntidades(); 
+//	   PruebaFindAllEntidades();
 	   
-	   String hql="";
-//	   hql+="FROM Empleado e ";
-//	   hql+="WHERE e.jefe.nombre = :nombre";
-	   hql += "FROM Producto p ";
-	   hql += "WHERE p.proveedor.empresa = :empresa ";
-	   Query q = MyHibernate.createQuery(hql);
-	   q.setParameter("empresa", "Sony");
-	   
-	   List<Producto> lst2 = q.getResultList();
-
-	   for (Producto producto : lst2) {
-		System.out.println(producto.getProveedor().getEmpresa());
-	}
-	   System.out.print(q.getHql());
+	   // Pruebas Entidades getResultList - 3era Entrega
+	   PruebaGetResultList();
    }
-   
+
+   private static void PruebaFindEntidades() 
+   {
+	   // Categoria
+//	   Categoria categoria = new Categoria();
+//	   categoria = MyHibernate.find(Categoria.class,1);
+//	   System.out.println(categoria.getIdCategoria());
+//	   System.out.println(categoria.getDescripcion());
+	   
+	   // Cliente
+//	   Cliente cliente = new Cliente();
+//	   cliente = MyHibernate.find(Cliente.class,1);
+//	   System.out.println(cliente.getIdCliente());
+//	   System.out.println(cliente.getNombre());
+//	   System.out.println(cliente.getDireccion());	   
+//	   System.out.println(cliente.getTipoCliente());
+//	   System.out.println(cliente.getTipoCliente().getDescripcion());
+
+	   // DetalleOrden - ERROR
+//	   DetalleOrden detalleOrden = new DetalleOrden();
+//	   detalleOrden = MyHibernate.find(DetalleOrden.class,1);
+//	   System.out.println(detalleOrden.getIdDetalleOrden());
+//	   System.out.println(detalleOrden.getCantidad());
+//	   System.out.println(detalleOrden.getProducto());
+//	   System.out.println(detalleOrden.getProducto().getDescripcion());
+//	   System.out.println(detalleOrden.getOrden().getCliente());
+	   
+//	   Empleado
+//	   Empleado empleado = new Empleado();
+//	   empleado = MyHibernate.find(Empleado.class,5);
+//	   System.out.println(empleado.getIdEmpleado());
+//	   System.out.println(empleado.getNombre());
+//	   
+//	   int counter = 1;
+//	   while (empleado.getJefe() != null)
+//	   {
+//		   empleado = empleado.getJefe();
+//		   System.out.println("Subempleado " + counter);
+//		   System.out.println(empleado.getIdEmpleado());
+//		   System.out.println(empleado.getNombre());
+//		   counter++;
+//	   }
+//	   
+//	   Empleado e2 = new Empleado();
+//	   e2 = MyHibernate.find(Empleado.class,2);
+//	   System.out.println(e2.getNombre());
+
+
+//	   Orden orden = new Orden();
+//	   orden = MyHibernate.find(Orden.class,1);
+//	   System.out.println(orden.getIdOrden());
+//	   System.out.println(orden.getFechaGenerada());
+//	   System.out.println(orden.getFechaEntregada());
+//	   System.out.println(orden.getCliente());
+//	   System.out.println(orden.getCliente().getNombre());
+//	   System.out.println(orden.getCliente().getTipoCliente().getDescripcion());
+//	   System.out.println(orden.getEmpleado());
+//	   System.out.println(orden.getEmpleado().getNombre());
+	   
+	   // Producto
+//	   Producto producto = new Producto();
+//	   producto = MyHibernate.find(Producto.class,1);
+//	   System.out.println(producto.getIdProducto());
+//	   System.out.println(producto.getDescripcion());
+//	   System.out.println(producto.getProveedor());
+//	   System.out.println(producto.getProveedor().getContacto());
+//	   System.out.println(producto.getCategoria());
+//	   System.out.println(producto.getCategoria().getDescripcion());
+//	   System.out.println(producto.getPrecioUnitario());
+//	   System.out.println(producto.getUnidadesStock());
+//	   System.out.println(producto.getUnidadesReposicion());
+	   
+	   // Promocion
+//	   Promocion promo = new Promocion();
+//	   promo = MyHibernate.find(Promocion.class,1);
+//	   System.out.println(promo.getIdPromocion());
+//	   System.out.println(promo.getDescripcion());
+	   
+	   // PromocionProducto - ERROR
+//	   PromocionProducto promoProducto = new PromocionProducto();
+//	   promoProducto = MyHibernate.find(PromocionProducto.class,1);
+//	   System.out.println(promoProducto.getIdPromocionProducto());
+//	   System.out.println(promoProducto.getPromocionVigencia());
+//	   System.out.println(promoProducto.getPromocionVigencia().getFechaFin());
+//	   System.out.println(promoProducto.getProducto());
+//	   System.out.println(promoProducto.getProducto().getDescripcion());
+	   
+	   // PromocionVigencia
+//	   PromocionVigencia promoVigencia = new PromocionVigencia();
+//	   promoVigencia = MyHibernate.find(PromocionVigencia.class,10);
+//	   System.out.println(promoVigencia.getIdPromocionVigencia());
+//	   System.out.println(promoVigencia.getFechaInicio());
+//	   System.out.println(promoVigencia.getPromocion().getDescripcion());
+
+	   // Proveedor
+//	   Proveedor proveedor = new Proveedor();
+//	   proveedor = MyHibernate.find(Proveedor.class,1);
+//	   System.out.println(proveedor.getIdProveedor());
+//	   System.out.println(proveedor.getEmpresa());
+//	   System.out.println(proveedor.getContacto());
+//	   System.out.println(proveedor.getDireccion());
+	   
+	   // ProveedorCategoria
+//	   ProveedorCategoria proveedorCategoria = new ProveedorCategoria();
+//	   proveedorCategoria = MyHibernate.find(ProveedorCategoria.class,1);
+//	   System.out.println(proveedorCategoria.getIdProveedorCategoria());
+//	   System.out.println(proveedorCategoria.getProveedor());
+//	   System.out.println(proveedorCategoria.getProveedor().getContacto());
+//	   System.out.println(proveedorCategoria.getCategoria());
+//	   System.out.println(proveedorCategoria.getCategoria().getDescripcion());
+	   
+	   // TipoCliente
+//	   TipoCliente tipoCliente = new TipoCliente();
+//	   tipoCliente = MyHibernate.find(TipoCliente.class,1);
+//	   System.out.println(tipoCliente.getIdTipoCliente());
+//	   System.out.println(tipoCliente.getDescripcion());
+   }
+
    private static void PruebaFindAllEntidades()
    {
 	   // Categoria
@@ -77,12 +179,12 @@ public class Demo
 //       }
        
        //Cliente
-       List<Cliente> lstCli = MyHibernate.findAll(Cliente.class);
-       for(Cliente clx:lstCli)
-       {
-          System.out.println(clx.getNombre() + ", " + clx.getDireccion());
-          System.out.println(clx.getTipoCliente() + ", " + clx.getTipoCliente().getDescripcion());
-       }
+//       List<Cliente> lstCli = MyHibernate.findAll(Cliente.class);
+//       for(Cliente clx:lstCli)
+//       {
+//          System.out.println(clx.getNombre() + ", " + clx.getDireccion());
+//          System.out.println(clx.getTipoCliente() + ", " + clx.getTipoCliente().getDescripcion());
+//       }
        
 	   // DetalleOrden
 //	   List<DetalleOrden> lstDetOrd = MyHibernate.findAll(DetalleOrden.class);
@@ -161,121 +263,102 @@ public class Demo
 //	        System.out.println(tipoclix.getIdTipoCliente() + ", " + tipoclix.getDescripcion());
 //       }
    }
-
-   private static void PruebaFindEntidades() 
+   
+   private static void PruebaGetResultList()
    {
-	   // Categoria
-//	   Categoria categoria = new Categoria();
-//	   categoria = MyHibernate.find(Categoria.class,1);
-//	   System.out.println(categoria.getIdCategoria());
-//	   System.out.println(categoria.getDescripcion());
+//	   // Categoria
+//	   String hql="";
+//	   hql += "FROM Categoria c ";
+//	   hql += "WHERE c.idCategoria = 3 AND c.descripcion = :desc ";
+//	   Query q = MyHibernate.createQuery(hql);
+//	   q.setParameter("desc", "Videouegos");
+//	   
+//	   List<Categoria> lst2 = q.getResultList();
+//	   for (Categoria categoria : lst2) {
+//		   System.out.println(categoria.getDescripcion());
+//	   }
 	   
-	   // Cliente
-//	   Cliente cliente = new Cliente();
-//	   cliente = MyHibernate.find(Cliente.class,1);
-//	   System.out.println(cliente.getIdCliente());
-//	   System.out.println(cliente.getNombre());
-//	   System.out.println(cliente.getDireccion());	   
-//	   System.out.println(cliente.getTipoCliente());
-//	   System.out.println(cliente.getTipoCliente().getDescripcion());
+//	   // Cliente
+//	   String hql="";
+//	   hql += "FROM Cliente cl ";
+//	   hql += "WHERE cl.tipoCliente.idTipoCliente = 1 ";
+//	   Query q = MyHibernate.createQuery(hql);
+//	   
+//	   List<Cliente> lst2 = q.getResultList();
+//	   for (Cliente cliente : lst2) {
+//		   System.out.println(cliente.getNombre());
+//	   }
+	          
+//	   // Empleado 
+//	   String hql="";
+//	   hql += "FROM Empleado e ";
+//	   hql += "WHERE e.jefe.idEmpleado = 1 ";
+//	   Query q = MyHibernate.createQuery(hql);
+//	   
+//	   List<Empleado> lst2 = q.getResultList();
+//	   for (Empleado empleado : lst2) {
+//		   System.out.println(empleado.getNombre());
+//	   }
+	   
+//	   // Orden
+//	   String hql="";
+//	   hql += "FROM Orden o ";
+//	   hql += "WHERE o.cliente.idCliente = 1 ";
+//	   Query q = MyHibernate.createQuery(hql);
+//	   
+//	   List<Orden> lst2 = q.getResultList();
+//	   for (Orden orden : lst2) {
+//		   System.out.println(orden.getCliente().getNombre() + " - " + orden.getEmpleado().getNombre());
+//	   }
+	    
+//	   // Producto
+//	   String hql="";
+//	   hql += "FROM Producto p ";
+//	   hql += "WHERE p.proveedor.empresa = :empresa ";
+//	   Query q = MyHibernate.createQuery(hql);
+//	   q.setParameter("empresa", "Sony");
+//	   
+//	   List<Producto> lst2 = q.getResultList();
+//	   for (Producto producto : lst2) {
+//   	   	System.out.println(producto.getDescripcion() + " - " + producto.getProveedor().getEmpresa());
+//	   }
+	   
+//	   // Promocion
+//	   String hql="";
+//	   hql += "FROM Promocion pr ";
+//	   hql += "WHERE pr.idPromocion = 2 AND pr.descripcion = :descripcion ";
+//	   Query q = MyHibernate.createQuery(hql);
+//	   q.setParameter("descripcion", "Promo Banco Galicia");
+//	   
+//	   List<Promocion> lst2 = q.getResultList();
+//	   for (Promocion promo : lst2) {
+//		   System.out.println(promo.getIdPromocion() + " - " + promo.getDescripcion());
+//	   }
+	   
+//	   // Proveedor
+//	   String hql="";
+//	   hql += "FROM Proveedor prov ";
+//	   hql += "WHERE prov.direccion = :direccion ";
+//	   Query q = MyHibernate.createQuery(hql);
+//	   q.setParameter("direccion", "Ing. Butty 214 Piso 3");
+//	   
+//	   List<Proveedor> lst2 = q.getResultList();
+//	   for (Proveedor prov : lst2) {
+//		   System.out.println(prov.getEmpresa() + " - " + prov.getDireccion() + " - " + prov.getContacto());
+//	   }
+	   
+//	   // TipoCliente
+//	   String hql="";
+//	   hql += "FROM TipoCliente tc ";
+//	   hql += "WHERE tc.idTipoCliente = 1 ";
+//	   Query q = MyHibernate.createQuery(hql);
+//	   
+//	   List<TipoCliente> lst2 = q.getResultList();
+//	   for (TipoCliente tipoCliente : lst2) {
+//		   System.out.println(tipoCliente.getIdTipoCliente() + " - " + tipoCliente.getDescripcion());
+//	   }
 
-	   // DetalleOrden - ERROR
-//	   DetalleOrden detalleOrden = new DetalleOrden();
-//	   detalleOrden = MyHibernate.find(DetalleOrden.class,1);
-//	   System.out.println(detalleOrden.getIdDetalleOrden());
-//	   System.out.println(detalleOrden.getCantidad());
-//	   System.out.println(detalleOrden.getProducto());
-//	   System.out.println(detalleOrden.getProducto().getDescripcion());
-//	   System.out.println(detalleOrden.getOrden().getCliente());
-	   
-//	   Empleado
-	   Empleado empleado = new Empleado();
-	   empleado = MyHibernate.find(Empleado.class,5);
-	   System.out.println(empleado.getIdEmpleado());
-	   System.out.println(empleado.getNombre());
-	   
-	   int counter = 1;
-	   while (empleado.getJefe() != null)
-	   {
-		   empleado = empleado.getJefe();
-		   System.out.println("Subempleado " + counter);
-		   System.out.println(empleado.getIdEmpleado());
-		   System.out.println(empleado.getNombre());
-		   counter++;
-	   }
-	   
-	   Empleado e2 = new Empleado();
-	   e2 = MyHibernate.find(Empleado.class,2);
-	   System.out.println(e2.getNombre());
-
-
-//	   Orden orden = new Orden();
-//	   orden = MyHibernate.find(Orden.class,1);
-//	   System.out.println(orden.getIdOrden());
-//	   System.out.println(orden.getFechaGenerada());
-//	   System.out.println(orden.getFechaEntregada());
-//	   System.out.println(orden.getCliente());
-//	   System.out.println(orden.getCliente().getNombre());
-//	   System.out.println(orden.getCliente().getTipoCliente().getDescripcion());
-//	   System.out.println(orden.getEmpleado());
-//	   System.out.println(orden.getEmpleado().getNombre());
-	   
-	   // Producto
-//	   Producto producto = new Producto();
-//	   producto = MyHibernate.find(Producto.class,1);
-//	   System.out.println(producto.getIdProducto());
-//	   System.out.println(producto.getDescripcion());
-//	   System.out.println(producto.getProveedor());
-//	   System.out.println(producto.getProveedor().getContacto());
-//	   System.out.println(producto.getCategoria());
-//	   System.out.println(producto.getCategoria().getDescripcion());
-//	   System.out.println(producto.getPrecioUnitario());
-//	   System.out.println(producto.getUnidadesStock());
-//	   System.out.println(producto.getUnidadesReposicion());
-	   
-	   // Promocion
-//	   Promocion promo = new Promocion();
-//	   promo = MyHibernate.find(Promocion.class,1);
-//	   System.out.println(promo.getIdPromocion());
-//	   System.out.println(promo.getDescripcion());
-	   
-	   // PromocionProducto - ERROR
-//	   PromocionProducto promoProducto = new PromocionProducto();
-//	   promoProducto = MyHibernate.find(PromocionProducto.class,1);
-//	   System.out.println(promoProducto.getIdPromocionProducto());
-//	   System.out.println(promoProducto.getPromocionVigencia());
-//	   System.out.println(promoProducto.getPromocionVigencia().getFechaFin());
-//	   System.out.println(promoProducto.getProducto());
-//	   System.out.println(promoProducto.getProducto().getDescripcion());
-	   
-	   // PromocionVigencia
-//	   PromocionVigencia promoVigencia = new PromocionVigencia();
-//	   promoVigencia = MyHibernate.find(PromocionVigencia.class,10);
-//	   System.out.println(promoVigencia.getIdPromocionVigencia());
-//	   System.out.println(promoVigencia.getFechaInicio());
-//	   System.out.println(promoVigencia.getPromocion().getDescripcion());
-
-	   // Proveedor
-//	   Proveedor proveedor = new Proveedor();
-//	   proveedor = MyHibernate.find(Proveedor.class,1);
-//	   System.out.println(proveedor.getIdProveedor());
-//	   System.out.println(proveedor.getEmpresa());
-//	   System.out.println(proveedor.getContacto());
-//	   System.out.println(proveedor.getDireccion());
-	   
-	   // ProveedorCategoria
-//	   ProveedorCategoria proveedorCategoria = new ProveedorCategoria();
-//	   proveedorCategoria = MyHibernate.find(ProveedorCategoria.class,1);
-//	   System.out.println(proveedorCategoria.getIdProveedorCategoria());
-//	   System.out.println(proveedorCategoria.getProveedor());
-//	   System.out.println(proveedorCategoria.getProveedor().getContacto());
-//	   System.out.println(proveedorCategoria.getCategoria());
-//	   System.out.println(proveedorCategoria.getCategoria().getDescripcion());
-	   
-	   // TipoCliente
-//	   TipoCliente tipoCliente = new TipoCliente();
-//	   tipoCliente = MyHibernate.find(TipoCliente.class,1);
-//	   System.out.println(tipoCliente.getIdTipoCliente());
-//	   System.out.println(tipoCliente.getDescripcion());
+//	   // Print Query HQL
+//	   System.out.print(q.getHql());
    }
 }
