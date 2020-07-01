@@ -4,6 +4,8 @@ Este repositorio contiene el codigo relacionado a la creación del T.P. de la ma
 
 ## Requisitos para que el proyecto funcione localmente
 
+### Archivo .classpath
+
 Se debe de crear un archivo .classpath con el siguiente contenido o en caso de ya tener el archivo creado copiar el texto a continuacion dentro del mismo.
 Este texto hace referencia a las dependencias del proyecto.
 
@@ -21,6 +23,15 @@ Este texto hace referencia a las dependencias del proyecto.
 </classpath>
 ```
 Una vez copiado el contenido se debe de cambiar la ubicación de estas dependecias por las que estan en el proyecto.
+
+### Archivo config.properties
+
+Para que funcione correctamente la conexión a la BDD local se debe de cambiar dentro del archivo config.properties la entrada que hace referencia a 'db_url' por la direccion local propia de la BDD que se vaya a utilizar.
+
+```
+db_url=jdbc:hsqldb:C:\\java64\\hsqldb-2.3.4\\hsqldb\\testdb;hsqldb.lock_file=false
+packageEntities=Entities
+```
 
 ## Dependecias utilizadas
 
